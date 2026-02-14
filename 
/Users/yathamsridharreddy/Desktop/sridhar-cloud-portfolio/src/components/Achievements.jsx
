@@ -1,0 +1,106 @@
+
+import { motion } from "framer-motion";
+import { SiLeetcode, SiCodechef, FaTrophy, FaMedal } from "react-icons/si";
+
+const achievements = [
+  { 
+    icon: <SiLeetcode />, 
+    text: "100+ LeetCode Problems Solved",
+    href: "https://leetcode.com/u/yathamsridharreddy/",
+    color: "#FFA116"
+  },
+  { 
+    icon: <SiCodechef />, 
+    text: "300+ Codechef Problems Solved",
+    href: "https://www.codechef.com/users/yathamsridharr",
+    color: "#5B4638"
+  },
+  { 
+    icon: <FaTrophy />, 
+    text: "Selected for SIH 2025 Hackathon",
+    href: null,
+    color: "#FFD700"
+  },
+  { 
+    icon: <FaMedal />, 
+    text: "6th Place - GeeksforGeeks HackSprint",
+    href: null,
+    color: "#C0C0C0"
+  }
+];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30, scale: 0.85 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 120,
+      damping: 20
+    }
+  }
+};
+
+export default function Achievements() {
+  return (
+    <motion.section 
+      id="achievements"
+      className="section achievementsSection"
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6 }}
+    >
+      <motion.h2
+        initial={{ opacity: 0, scale: 0.8 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
+        Achievements
+      </motion.h2>
+
+      <motion.div 
+        className="achievementsGrid"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      >
+        {achievements.map((item, i) => (
+          <motion.div 
+            key={i} 
+            className="achievementCard"
+            variants={itemVariants}
+            whileHover={{ scale: 1.03, y: -3 }}
+            {...(item.href ? { as: "a", href: item.href, target: "_blank", rel: "noopener noreferrer" } : {})}
+          >
+            <motion.span 
+              className="achievementIcon"
+              style={{ color: item.color }}
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 }}
+            >
+              {item.icon}
+            </motion.span>
+            <span>{item.text}</span>
+          </motion.div>
+        ))}
+      </motion.div>
+    </motion.section>
+  );
+}
+
