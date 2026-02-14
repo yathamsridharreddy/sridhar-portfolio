@@ -39,11 +39,11 @@ export default function Hero() {
       >
         <TypeAnimation
           sequence={[
-            "Cloud Engineer ☁️",
+            "Cloud Engineer",
             1500,
-            "DevOps Engineer ⚙️",
+            "DevOps Engineer",
             1500,
-            "AWS Developer 🚀",
+            "AWS Developer",
             1500,
           ]}
           repeat={Infinity}

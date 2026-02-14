@@ -132,7 +132,7 @@ export default function Contact() {
           viewport={{ once: true }}
           style={{ fontSize: '1.1rem', marginBottom: '1rem' }}
         >
-          Ready to collaborate on cloud & DevOps projects? 🚀
+          Ready to collaborate on cloud & DevOps projects?
         </motion.p>
       </motion.div>
 
