@@ -9,6 +9,12 @@ const projects = [
     title: "CodeSync",
     desc: "Flask + AWS SNS notification automation",
     arch: arch1,
+    images: [
+      "/project2-image1.jpeg",
+      "/project2-image2.jpeg",
+      "/project2-image3.jpeg",
+      "/project2-image4.jpeg"
+    ],
     link: "https://github.com/yathamsridharreddy/aws-cloud-projects/tree/main/CodeSync"
   },
   {
