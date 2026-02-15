@@ -15,6 +15,12 @@ const projects = [
     title: "CloudSmiths",
     desc: "EC2 + RDS + S3 + Docker scalable platform",
     arch: arch2,
+    images: [
+      "/project-image1.jpeg",
+      "/project-image2.jpeg",
+      "/project-image3.jpeg",
+      "/project-image4.jpeg"
+    ],
     link: "https://github.com/yathamsridharreddy/aws-cloud-projects/tree/main/CloudSmiths"
   }
 ];
