@@ -182,13 +182,13 @@ export default function Contact() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
             style={{ 
-              background: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%)",
+              background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
               color: "white",
               padding: "1.5rem 2rem",
               borderRadius: "16px",
               marginBottom: "1rem",
               textAlign: "center",
-              boxShadow: "0 8px 32px rgba(139, 92, 246, 0.4), 0 0 0 2px rgba(139, 92, 246, 0.2)",
+              boxShadow: "0 8px 32px rgba(34, 197, 94, 0.4), 0 0 0 2px rgba(34, 197, 94, 0.2)",
               border: "2px solid rgba(255, 255, 255, 0.3)"
             }}
           >
