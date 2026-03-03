@@ -50,10 +50,10 @@ export default function Contact() {
       if (response.ok) {
         setStatus("success");
         setFormData({ name: "", email: "", message: "" });
-        // Auto-dismiss success message after 5 seconds
+        // Auto-dismiss success message after 4 seconds
         setTimeout(() => {
           setStatus(null);
-        }, 5000);
+        }, 4000);
       } else {
         setStatus("error");
         // Auto-dismiss error message after 5 seconds
@@ -182,14 +182,14 @@ export default function Contact() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
             style={{ 
-              background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
-              color: "white",
+              background: "rgba(0, 255, 255, 0.1)",
+              border: "2px solid #00ffff",
+              color: "#00e6ff",
               padding: "1.5rem 2rem",
               borderRadius: "16px",
               marginBottom: "1rem",
               textAlign: "center",
-              boxShadow: "0 8px 32px rgba(34, 197, 94, 0.4), 0 0 0 2px rgba(34, 197, 94, 0.2)",
-              border: "2px solid rgba(255, 255, 255, 0.3)"
+              boxShadow: "0 0 30px rgba(0, 255, 255, 0.3), 0 0 20px rgba(0, 255, 255, 0.1)",
             }}
           >
             <motion.div
