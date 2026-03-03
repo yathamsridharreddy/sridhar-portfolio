@@ -50,23 +50,23 @@ export default function Contact() {
       if (response.ok) {
         setStatus("success");
         setFormData({ name: "", email: "", message: "" });
-        // Auto-dismiss success message after 4 seconds
+        // Auto-dismiss success message after 5 seconds
         setTimeout(() => {
           setStatus(null);
-        }, 4000);
+        }, 5000);
       } else {
         setStatus("error");
-        // Auto-dismiss error message after 4 seconds
+        // Auto-dismiss error message after 5 seconds
         setTimeout(() => {
           setStatus(null);
-        }, 4000);
+        }, 5000);
       }
     } catch (error) {
       setStatus("error");
-      // Auto-dismiss error message after 4 seconds
+      // Auto-dismiss error message after 5 seconds
       setTimeout(() => {
         setStatus(null);
-      }, 4000);
+      }, 5000);
     }
   };
 
@@ -240,37 +240,40 @@ export default function Contact() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
               style={{ 
-                background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
+                background: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%)",
                 color: "white",
-                padding: "1.25rem 1.5rem",
-                borderRadius: "12px",
+                padding: "1.5rem 2rem",
+                borderRadius: "16px",
                 marginBottom: "1rem",
                 textAlign: "center",
-                boxShadow: "0 4px 20px rgba(34, 197, 94, 0.3)"
+                boxShadow: "0 8px 32px rgba(139, 92, 246, 0.4), 0 0 0 2px rgba(139, 92, 246, 0.2)",
+                border: "2px solid rgba(255, 255, 255, 0.3)"
               }}
             >
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.1 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
                 style={{ 
-                  fontSize: "1.1rem", 
-                  fontWeight: "600",
-                  marginBottom: "0.25rem"
+                  fontSize: "1.25rem", 
+                  fontWeight: "700",
+                  marginBottom: "0.5rem",
+                  textShadow: "0 2px 4px rgba(0,0,0,0.2)"
                 }}
               >
-                Message Sent Successfully!
+                ✉️ Message Sent Successfully!
               </motion.div>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
                 style={{ 
-                  fontSize: "0.9rem",
-                  opacity: 0.9
+                  fontSize: "1rem",
+                  fontWeight: "500",
+                  opacity: 0.95
                 }}
               >
-                I'll get back to you soon.
+                💬 I'll get back to you soon.
               </motion.div>
             </motion.div>
           )}
