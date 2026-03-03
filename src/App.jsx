@@ -1,4 +1,5 @@
 import Navbar from "./components/Navbar";
+import ViewerCount from "./components/ViewerCount";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Skills from "./components/Skills";
@@ -15,6 +16,7 @@ export default function App() {
   return (
     <>
       <Navbar />
+      <ViewerCount />
       <Hero />
       <About />
       <Skills />
