@@ -174,160 +174,164 @@ export default function Contact() {
           I'm actively seeking new opportunities. Whether you have a question or just want to say hi, my inbox is always open!
         </motion.p>
 
-        <form onSubmit={handleSubmit}>
+        <AnimatePresence mode="wait">
+        {status === "success" ? (
           <motion.div
-            className="form-group"
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.9 }}
-          >
-            <label htmlFor="name">Your Name</label>
-            <input 
-              type="text" 
-              id="name" 
-              name="name" 
-              placeholder=""
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </motion.div>
-
-          <motion.div
-            className="form-group"
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 1.0 }}
-          >
-            <label htmlFor="email">Your Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              placeholder="example@gmail.com"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </motion.div>
-
-          <motion.div
-            className="form-group"
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 1.1 }}
-          >
-            <label htmlFor="message">Your Message</label>
-            <textarea 
-              id="message" 
-              name="message" 
-              rows="5"
-              placeholder="I'd love to chat about..."
-              value={formData.message}
-              onChange={handleChange}
-              required
-            ></textarea>
-          </motion.div>
-
-          <AnimatePresence mode="wait">
-          {status === "success" && (
-            <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              style={{ 
-                background: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%)",
-                color: "white",
-                padding: "1.5rem 2rem",
-                borderRadius: "16px",
-                marginBottom: "1rem",
-                textAlign: "center",
-                boxShadow: "0 8px 32px rgba(139, 92, 246, 0.4), 0 0 0 2px rgba(139, 92, 246, 0.2)",
-                border: "2px solid rgba(255, 255, 255, 0.3)"
-              }}
-            >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-                style={{ 
-                  fontSize: "1.25rem", 
-                  fontWeight: "700",
-                  marginBottom: "0.5rem",
-                  textShadow: "0 2px 4px rgba(0,0,0,0.2)"
-                }}
-              >
-                ✉️ Message Sent Successfully!
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                style={{ 
-                  fontSize: "1rem",
-                  fontWeight: "500",
-                  opacity: 0.95
-                }}
-              >
-                💬 I'll get back to you soon.
-              </motion.div>
-            </motion.div>
-          )}
-
-          {status === "error" && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              style={{ color: "#ef4444", marginBottom: "1rem", textAlign: "center" }}
-            >
-              Something went wrong. Please try again.
-            </motion.div>
-          )}
-          </AnimatePresence>
-
-          <motion.button
-            type="submit"
-            className="send-button"
-            whileHover={{ scale: status === "submitting" ? 1 : 1.05 }}
-            whileTap={{ scale: status === "submitting" ? 1 : 0.95 }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 1.2 }}
-            disabled={status === "submitting"}
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
             style={{ 
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "0.5rem",
-              cursor: status === "submitting" ? "not-allowed" : "pointer",
-              opacity: status === "submitting" ? 0.7 : 1
+              background: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%)",
+              color: "white",
+              padding: "1.5rem 2rem",
+              borderRadius: "16px",
+              marginBottom: "1rem",
+              textAlign: "center",
+              boxShadow: "0 8px 32px rgba(139, 92, 246, 0.4), 0 0 0 2px rgba(139, 92, 246, 0.2)",
+              border: "2px solid rgba(255, 255, 255, 0.3)"
             }}
           >
-            {status === "submitting" ? (
-              <>
-                <motion.span
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  style={{ display: "inline-block" }}
-                >
-                  <FaSpinner />
-                </motion.span>
-                Sending...
-              </>
-            ) : (
-              <>
-                <FaPaperPlane />
-                Send Message
-              </>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+              style={{ 
+                fontSize: "1.25rem", 
+                fontWeight: "700",
+                marginBottom: "0.5rem",
+                textShadow: "0 2px 4px rgba(0,0,0,0.2)"
+              }}
+            >
+              ✉️ Message Sent Successfully!
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              style={{ 
+                fontSize: "1rem",
+                fontWeight: "500",
+                opacity: 0.95
+              }}
+            >
+              💬 I'll get back to you soon.
+            </motion.div>
+          </motion.div>
+        ) : (
+          <motion.form
+            onSubmit={handleSubmit}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
+            <motion.div
+              className="form-group"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.9 }}
+            >
+              <label htmlFor="name">Your Name</label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                placeholder=""
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </motion.div>
+
+            <motion.div
+              className="form-group"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 1.0 }}
+            >
+              <label htmlFor="email">Your Email</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                placeholder="example@gmail.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </motion.div>
+
+            <motion.div
+              className="form-group"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 1.1 }}
+            >
+              <label htmlFor="message">Your Message</label>
+              <textarea 
+                id="message" 
+                name="message" 
+                rows="5"
+                placeholder="I'd love to chat about..."
+                value={formData.message}
+                onChange={handleChange}
+                required
+              ></textarea>
+            </motion.div>
+
+            {status === "error" && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{ color: "#ef4444", marginBottom: "1rem", textAlign: "center" }}
+              >
+                Something went wrong. Please try again.
+              </motion.div>
             )}
-          </motion.button>
-        </form>
+
+            <motion.button
+              type="submit"
+              className="send-button"
+              whileHover={{ scale: status === "submitting" ? 1 : 1.05 }}
+              whileTap={{ scale: status === "submitting" ? 1 : 0.95 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 1.2 }}
+              disabled={status === "submitting"}
+              style={{ 
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.5rem",
+                cursor: status === "submitting" ? "not-allowed" : "pointer",
+                opacity: status === "submitting" ? 0.7 : 1
+              }}
+            >
+              {status === "submitting" ? (
+                <>
+                  <motion.span
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    style={{ display: "inline-block" }}
+                  >
+                    <FaSpinner />
+                  </motion.span>
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <FaPaperPlane />
+                  Send Message
+                </>
+              )}
+            </motion.button>
+          </motion.form>
+        )}
+        </AnimatePresence>
       </motion.div>
     </motion.section>
   );
