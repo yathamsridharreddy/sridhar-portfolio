@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { FaEnvelope, FaGithub, FaLinkedin, FaPhone } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaEnvelope, FaGithub, FaLinkedin, FaPhone, FaPaperPlane, FaSpinner } from "react-icons/fa";
 
 const contactInfo = [
   { icon: <FaEnvelope />, text: "yathamsridharreddy99@gmail.com", href: "mailto:yathamsridharreddy99@gmail.com" },
@@ -50,11 +50,23 @@ export default function Contact() {
       if (response.ok) {
         setStatus("success");
         setFormData({ name: "", email: "", message: "" });
+        // Auto-dismiss success message after 4 seconds
+        setTimeout(() => {
+          setStatus(null);
+        }, 4000);
       } else {
         setStatus("error");
+        // Auto-dismiss error message after 4 seconds
+        setTimeout(() => {
+          setStatus(null);
+        }, 4000);
       }
     } catch (error) {
       setStatus("error");
+      // Auto-dismiss error message after 4 seconds
+      setTimeout(() => {
+        setStatus(null);
+      }, 4000);
     }
   };
 
@@ -220,13 +232,46 @@ export default function Contact() {
             ></textarea>
           </motion.div>
 
+          <AnimatePresence mode="wait">
           {status === "success" && (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              style={{ color: "#22c55e", marginBottom: "1rem", textAlign: "center" }}
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              style={{ 
+                background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
+                color: "white",
+                padding: "1.25rem 1.5rem",
+                borderRadius: "12px",
+                marginBottom: "1rem",
+                textAlign: "center",
+                boxShadow: "0 4px 20px rgba(34, 197, 94, 0.3)"
+              }}
             >
-              Message sent successfully! I'll get back to you soon.
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.1 }}
+                style={{ 
+                  fontSize: "1.1rem", 
+                  fontWeight: "600",
+                  marginBottom: "0.25rem"
+                }}
+              >
+                Message Sent Successfully!
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                style={{ 
+                  fontSize: "0.9rem",
+                  opacity: 0.9
+                }}
+              >
+                I'll get back to you soon.
+              </motion.div>
             </motion.div>
           )}
 
@@ -234,24 +279,50 @@ export default function Contact() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
               style={{ color: "#ef4444", marginBottom: "1rem", textAlign: "center" }}
             >
               Something went wrong. Please try again.
             </motion.div>
           )}
+          </AnimatePresence>
 
           <motion.button
             type="submit"
             className="send-button"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: status === "submitting" ? 1 : 1.05 }}
+            whileTap={{ scale: status === "submitting" ? 1 : 0.95 }}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 1.2 }}
             disabled={status === "submitting"}
+            style={{ 
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
+              cursor: status === "submitting" ? "not-allowed" : "pointer",
+              opacity: status === "submitting" ? 0.7 : 1
+            }}
           >
-            {status === "submitting" ? "Sending..." : "Send Message"}
+            {status === "submitting" ? (
+              <>
+                <motion.span
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  style={{ display: "inline-block" }}
+                >
+                  <FaSpinner />
+                </motion.span>
+                Sending...
+              </>
+            ) : (
+              <>
+                <FaPaperPlane />
+                Send Message
+              </>
+            )}
           </motion.button>
         </form>
       </motion.div>
