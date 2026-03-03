@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 
 const items = [
-  "Started AWS & Linux",
-  "Built CodeSync",
-  "Built CloudSmiths",
-  "Certified AWS Developer"
+  "Built a Solid Foundation in Linux and Cloud Technologies",
+  "Developed CodeSync – A coding activity automation system with AWS SNS integration",
+  "Developed CloudSmiths – A cloud-based platform deployed on AWS with Docker",
+  "Currently Advancing Toward AWS Developer Certification"
 ];
 
 const itemVariants = {
