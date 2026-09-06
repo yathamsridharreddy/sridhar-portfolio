@@ -1396,9 +1396,9 @@ body.light .auroraBlob {
   gap: 1.4rem;
 }
 .certCard {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
-  align-content: start;
 }
 .certCard .certIcon {
   background: color-mix(in srgb, var(--accent) 14%, transparent);
@@ -1420,7 +1420,8 @@ body.light .auroraBlob {
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
-  margin-top: 0.8rem;
+  margin-top: auto;
+  padding-top: 0.9rem;
 }
 
 .badgeModal {
