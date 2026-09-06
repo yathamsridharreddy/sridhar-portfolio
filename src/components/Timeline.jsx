@@ -1,60 +1,86 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useSpring, useReducedMotion } from "framer-motion";
+import SectionHeading from "./SectionHeading";
+import { viewport, dur, ease } from "../motion";
 
 const items = [
-  "Built a Solid Foundation in Linux and Cloud Technologies",
-  "Developed CodeSync – A coding activity automation system with AWS SNS integration",
-  "Developed CloudSmiths – A cloud-based platform deployed on AWS with Docker",
-  "Currently Advancing Toward AWS Developer Certification"
+  {
+    year: "Foundation",
+    title: "Built a Solid Foundation in Linux and Cloud Technologies",
+    body: "Hands-on with Linux administration, networking fundamentals and core AWS services.",
+  },
+  {
+    year: "Project",
+    title: "Developed CodeSync",
+    body: "A coding activity automation system built on Flask with AWS SNS notification integration.",
+  },
+  {
+    year: "Project",
+    title: "Developed CloudSmiths",
+    body: "A cloud-based platform deployed on AWS with EC2, RDS, S3 and Docker.",
+  },
+  {
+    year: "Now",
+    title: "Advancing Toward AWS Developer Certification",
+    body: "Deepening serverless, IaC and CI/CD expertise for production-grade systems.",
+  },
 ];
 
-const itemVariants = {
-  hidden: { opacity: 0, x: -50 },
-  visible: (i) => ({
-    opacity: 1,
-    x: 0,
-    transition: {
-      delay: i * 0.15,
-      duration: 0.5
-    }
-  })
-};
-
 export default function Timeline() {
-  return (
-    <motion.section 
-      id="journey"
-      className="section"
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6 }}
-    >
-      <motion.h2
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-      >
-        Journey
-      </motion.h2>
+  const reduced = useReducedMotion();
+  const ref = useRef(null);
 
-      {items.map((t, i) => (
-        <motion.div 
-          key={i} 
-          className="timelineItem"
-          custom={i}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={itemVariants}
-          whileHover={{ 
-            scale: 1.02,
-            transition: { duration: 0.2 }
-          }}
-        >
-          {t}
-        </motion.div>
-      ))}
-    </motion.section>
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 75%", "end 60%"],
+  });
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
+  return (
+    <section id="journey" className="section journeySection">
+      <SectionHeading eyebrow="How I got here" title="Journey" />
+
+      <div className="timeline" ref={ref}>
+        <div className="timelineRail" aria-hidden="true">
+          <motion.div
+            className="timelineProgress"
+            style={reduced ? { scaleY: 1 } : { scaleY }}
+          />
+        </div>
+
+        {items.map((item, i) => (
+          <motion.div
+            key={item.title}
+            className="timelineItem"
+            initial={{ opacity: 0, x: -28 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={viewport}
+            transition={{ duration: dur.base, ease: ease.out, delay: i * 0.06 }}
+          >
+            <motion.span
+              className="timelineNode"
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              viewport={viewport}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 18,
+                delay: i * 0.06 + 0.1,
+              }}
+            />
+            <div className="timelineCard">
+              <span className="timelineYear">{item.year}</span>
+              <h3 className="timelineTitle">{item.title}</h3>
+              <p className="timelineBody">{item.body}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
   );
 }

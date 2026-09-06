@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { FaMoon, FaSun, FaBars, FaTimes } from "react-icons/fa";
+import { FaMoon, FaSun, FaBars, FaXmark } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
+import { ease, dur, spring } from "../motion";
 
 const navItems = [
   { name: "Home", href: "#hero" },
@@ -11,16 +12,14 @@ const navItems = [
   { name: "Experience", href: "#experience" },
   { name: "Education", href: "#education" },
   { name: "Certifications", href: "#certifications" },
-  { name: "Coding Profiles", href: "#coding-profiles" },
+  { name: "Profiles", href: "#coding-profiles" },
   { name: "Achievements", href: "#achievements" },
-  { name: "Contact", href: "#contact" }
+  { name: "Contact", href: "#contact" },
 ];
 
 const logoLetters = "SRIDHAR".split("");
-
 const THEME_KEY = "portfolio-theme";
 
-// Saved choice wins; otherwise follow the OS setting; otherwise dark.
 function getInitialTheme() {
   if (typeof window === "undefined") return true;
   const saved = window.localStorage.getItem(THEME_KEY);
@@ -36,11 +35,11 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState("hero");
 
   useEffect(() => {
-    document.body.className = dark ? "dark" : "light";
+    document.body.classList.toggle("dark", dark);
+    document.body.classList.toggle("light", !dark);
     window.localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
   }, [dark]);
 
-  // Follow the OS theme until the visitor picks one explicitly.
   useEffect(() => {
     if (window.localStorage.getItem(THEME_KEY)) return;
     const media = window.matchMedia("(prefers-color-scheme: light)");
@@ -50,14 +49,12 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock body scroll while the mobile menu is open.
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
@@ -66,96 +63,101 @@ export default function Navbar() {
   }, [menuOpen]);
 
   useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === "Escape") setMenuOpen(false);
-    };
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
+    const onKey = (e) => e.key === "Escape" && setMenuOpen(false);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, []);
 
   useEffect(() => {
-    const sections = navItems.map(item => item.href.substring(1));
-
+    const ids = navItems.map((i) => i.href.slice(1));
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
         });
       },
-      { threshold: 0.1, rootMargin: "-100px 0px -50% 0px" }
+      { threshold: 0.1, rootMargin: "-100px 0px -55% 0px" }
     );
-
-    sections.forEach((sectionId) => {
-      const element = document.getElementById(sectionId);
-      if (element) observer.observe(element);
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
     });
-
     return () => observer.disconnect();
   }, []);
 
   return (
-    <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
-      <motion.a
-        href="#hero"
-        className="navLogo"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        aria-label="Back to top"
-      >
-        {logoLetters.map((letter, index) => (
+    <motion.nav
+      className={`nav ${scrolled ? "scrolled" : ""}`}
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: dur.slow, ease: ease.out, delay: 0.1 }}
+    >
+      <a href="#hero" className="navLogo" aria-label="Back to top">
+        {logoLetters.map((letter, i) => (
           <motion.span
-            key={index}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ 
-              duration: 0.3, 
-              delay: index * 0.08,
-              type: "spring",
-              stiffness: 200,
-              damping: 10
-            }}
+            key={i}
             className="logoLetter"
+            initial={{ opacity: 0, y: -14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...spring.bouncy, delay: 0.3 + i * 0.05 }}
           >
             {letter}
           </motion.span>
         ))}
-      </motion.a>
+        <span className="logoDot" />
+      </a>
 
       <div className="navLinks">
-        {navItems.map((item, index) => {
-          const sectionId = item.href.substring(1);
+        {navItems.map((item) => {
+          const id = item.href.slice(1);
+          const active = activeSection === id;
           return (
-            <a 
-              key={index}
+            <a
+              key={id}
               href={item.href}
-              className={`navLink ${activeSection === sectionId ? "active" : ""}`}
+              className={`navLink ${active ? "active" : ""}`}
             >
-              {item.name}
+              {active && (
+                <motion.span
+                  className="navPill"
+                  layoutId="navPill"
+                  transition={spring.base}
+                />
+              )}
+              <span className="navLinkText">{item.name}</span>
             </a>
           );
         })}
       </div>
 
       <div className="navActions">
-        <button 
-          onClick={() => setDark(!dark)} 
-          className="toggle"
+        <button
+          onClick={() => setDark(!dark)}
+          className="iconBtn"
           aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
         >
-          {dark ? <FaSun /> : <FaMoon />}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={dark ? "sun" : "moon"}
+              initial={{ rotate: -90, opacity: 0, scale: 0.6 }}
+              animate={{ rotate: 0, opacity: 1, scale: 1 }}
+              exit={{ rotate: 90, opacity: 0, scale: 0.6 }}
+              transition={{ duration: dur.fast, ease: ease.out }}
+              style={{ display: "grid", placeItems: "center" }}
+            >
+              {dark ? <FaSun /> : <FaMoon />}
+            </motion.span>
+          </AnimatePresence>
         </button>
 
         <button
-          onClick={() => setMenuOpen((open) => !open)}
-          className="menuToggle"
+          onClick={() => setMenuOpen((o) => !o)}
+          className="iconBtn menuToggle"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"
         >
-          {menuOpen ? <FaTimes /> : <FaBars />}
+          {menuOpen ? <FaXmark /> : <FaBars />}
         </button>
       </div>
 
@@ -167,34 +169,46 @@ export default function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: dur.fast }}
               onClick={() => setMenuOpen(false)}
             />
             <motion.div
               id="mobile-menu"
               className="mobileMenu"
-              initial={{ opacity: 0, x: "100%" }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: "100%" }}
-              transition={{ type: "spring", stiffness: 260, damping: 30 }}
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: dur.base, ease: ease.out }}
             >
-              {navItems.map((item, index) => {
-                const sectionId = item.href.substring(1);
+              {navItems.map((item, i) => {
+                const id = item.href.slice(1);
                 return (
-                  <a
-                    key={index}
+                  <motion.a
+                    key={id}
                     href={item.href}
-                    className={`mobileNavLink ${activeSection === sectionId ? "active" : ""}`}
+                    className={`mobileNavLink ${
+                      activeSection === id ? "active" : ""
+                    }`}
                     onClick={() => setMenuOpen(false)}
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      delay: 0.08 + i * 0.04,
+                      duration: dur.base,
+                      ease: ease.out,
+                    }}
                   >
+                    <span className="mobileNavIndex">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
                     {item.name}
-                  </a>
+                  </motion.a>
                 );
               })}
             </motion.div>
           </>
         )}
       </AnimatePresence>
-    </nav>
+    </motion.nav>
   );
 }

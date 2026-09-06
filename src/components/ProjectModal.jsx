@@ -1,203 +1,198 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  FaXmark, FaChevronLeft, FaChevronRight, FaGithub, FaImages,
+} from "react-icons/fa6";
+import { ease, dur, spring } from "../motion";
 
 export default function ProjectModal({ project, close }) {
-  const [showCarousel, setShowCarousel] = useState(false);
-  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [carousel, setCarousel] = useState(false);
+  const [index, setIndex] = useState(0);
+  const dialogRef = useRef(null);
+  const lastFocused = useRef(null);
 
-  // Reset state when project changes
   useEffect(() => {
-    setShowCarousel(false);
-    setCarouselIndex(0);
+    setCarousel(false);
+    setIndex(0);
   }, [project]);
 
-  // Close modal on Escape key press
+  // Focus management: trap inside the dialog, restore on close.
   useEffect(() => {
-    const handleEscape = (e) => {
+    lastFocused.current = document.activeElement;
+    dialogRef.current?.focus();
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+      lastFocused.current?.focus?.();
+    };
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => {
       if (e.key === "Escape") {
-        if (showCarousel) {
-          setShowCarousel(false);
-        } else {
-          close();
+        carousel ? setCarousel(false) : close();
+      }
+      if (carousel && e.key === "ArrowRight") next();
+      if (carousel && e.key === "ArrowLeft") prev();
+      if (e.key === "Tab" && !carousel) {
+        const nodes = dialogRef.current?.querySelectorAll(
+          'a[href], button, [tabindex]:not([tabindex="-1"])'
+        );
+        if (!nodes?.length) return;
+        const first = nodes[0];
+        const last = nodes[nodes.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
         }
       }
     };
-    
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [close, showCarousel]);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  });
 
-  const openCarousel = () => {
-    setCarouselIndex(0);
-    setShowCarousel(true);
-  };
-
-  const nextImage = () => {
-    if (project.images && project.images.length > 0) {
-      setCarouselIndex((prev) => 
-        prev === project.images.length - 1 ? 0 : prev + 1
-      );
-    }
-  };
-
-  const prevImage = () => {
-    if (project.images && project.images.length > 0) {
-      setCarouselIndex((prev) => 
-        prev === 0 ? project.images.length - 1 : prev - 1
-      );
-    }
-  };
-
-  if (!project) return null;
+  const count = project.images?.length ?? 0;
+  const next = () => setIndex((i) => (i === count - 1 ? 0 : i + 1));
+  const prev = () => setIndex((i) => (i === 0 ? count - 1 : i - 1));
 
   return (
     <>
-      <motion.div 
-        className="modalBg" 
+      <motion.div
+        className="modalBg"
         onClick={close}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: dur.fast }}
       >
-        <motion.div 
-          className="modal" 
+        <motion.div
+          ref={dialogRef}
+          tabIndex={-1}
+          className="modal"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-title"
+          layoutId={`card-${project.id}`}
           onClick={(e) => e.stopPropagation()}
-          initial={{ opacity: 0, scale: 0.8, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.8, y: 20 }}
-          transition={{ 
-            type: "spring",
-            stiffness: 300,
-            damping: 25
-          }}
+          transition={spring.base}
         >
-          <motion.h3 
-            id="modal-title"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            {project.title}
-          </motion.h3>
-          
-          <div className="modalImageContainer">
-            <motion.img 
-              src={project.arch} 
+          <button className="modalClose" onClick={close} aria-label="Close">
+            <FaXmark />
+          </button>
+
+          <div className="modalMedia">
+            <motion.img
+              layoutId={`thumb-${project.id}`}
+              src={project.arch}
               alt={`Architecture diagram for ${project.title}`}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
             />
-            
-            {/* Left arrow button on the right side */}
-            {project.images && (
-              <button 
-                className="carouselArrow carouselArrowRight" 
-                onClick={openCarousel}
-                aria-label="View project images"
-                title="View project images"
+            {count > 0 && (
+              <button
+                className="modalGalleryBtn"
+                onClick={() => {
+                  setIndex(0);
+                  setCarousel(true);
+                }}
               >
-                ◀
+                <FaImages /> {count} screenshots
               </button>
             )}
           </div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            {project.desc}
-          </motion.p>
-          <motion.a 
-            href={project.link} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            GitHub
-          </motion.a>
+          <div className="modalBody">
+            <motion.h3 layoutId={`title-${project.id}`} id="modal-title">
+              {project.title}
+            </motion.h3>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: dur.base, ease: ease.out }}
+            >
+              <p className="modalDesc">{project.desc}</p>
+
+              <ul className="tagRow">
+                {project.tags?.map((t) => (
+                  <li key={t} className="tag">{t}</li>
+                ))}
+              </ul>
+
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btnPrimary modalLink"
+              >
+                <FaGithub /> View on GitHub
+              </a>
+            </motion.div>
+          </div>
         </motion.div>
       </motion.div>
 
-      {/* Fullscreen Carousel Modal - Big Images Like Certificates */}
       <AnimatePresence>
-        {showCarousel && (
-          <motion.div 
-            className="carouselModal"
+        {carousel && (
+          <motion.div
+            className="lightbox"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setShowCarousel(false)}
+            onClick={() => setCarousel(false)}
           >
-            <motion.div 
-              className="carouselModalContent"
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              onClick={(e) => e.stopPropagation()}
+            <button
+              className="lightboxClose"
+              onClick={() => setCarousel(false)}
+              aria-label="Close gallery"
             >
-              <button 
-                className="carouselClose" 
-                onClick={() => setShowCarousel(false)}
-              >
-                ×
-              </button>
-              
-              {/* Left Arrow */}
-              <button 
-                className="carouselNavArrow carouselNavLeft" 
-                onClick={prevImage}
-                aria-label="Previous image"
-              >
-                ←
-              </button>
-              
-              {/* Main Image - Big like certificate */}
-              <motion.img 
-                key={carouselIndex}
-                src={project.images[carouselIndex]} 
-                alt={`Project image ${carouselIndex + 1}`}
-                className="carouselModalImage"
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.3 }}
-              />
-              
-              {/* Right Arrow */}
-              <button 
-                className="carouselNavArrow carouselNavRight" 
-                onClick={nextImage}
-                aria-label="Next image"
-              >
-                →
-              </button>
+              <FaXmark />
+            </button>
 
-              {/* Dots */}
-              {project.images && project.images.length > 1 && (
-                <div className="carouselDots" style={{ position: 'absolute', bottom: '1rem', left: '50%', transform: 'translateX(-50%)' }}>
-                  {project.images.map((_, index) => (
-                    <span 
-                      key={index} 
-                      className={`carouselDot ${index === carouselIndex ? 'active' : ''}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setCarouselIndex(index);
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
-            </motion.div>
+            <button
+              className="lightboxNav prev"
+              onClick={(e) => { e.stopPropagation(); prev(); }}
+              aria-label="Previous image"
+            >
+              <FaChevronLeft />
+            </button>
+
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={index}
+                src={project.images[index]}
+                alt={`${project.title} screenshot ${index + 1}`}
+                className="lightboxImage"
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: dur.fast, ease: ease.out }}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </AnimatePresence>
+
+            <button
+              className="lightboxNav next"
+              onClick={(e) => { e.stopPropagation(); next(); }}
+              aria-label="Next image"
+            >
+              <FaChevronRight />
+            </button>
+
+            <div className="lightboxDots" onClick={(e) => e.stopPropagation()}>
+              {project.images.map((_, i) => (
+                <button
+                  key={i}
+                  className={`lightboxDot ${i === index ? "active" : ""}`}
+                  onClick={() => setIndex(i)}
+                  aria-label={`Go to image ${i + 1}`}
+                />
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
     </>
   );
 }
-

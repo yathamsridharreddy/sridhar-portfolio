@@ -1,199 +1,116 @@
-import { motion } from "framer-motion";
-import { FaAws, FaCertificate } from "react-icons/fa";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaAws, FaCertificate, FaXmark, FaArrowUpRightFromSquare } from "react-icons/fa6";
+import SectionHeading from "./SectionHeading";
+import TiltCard from "./TiltCard";
+import { viewport, stagger, cardIn, dur, ease, spring } from "../motion";
 
-const certifications = [ 
-  { 
-    badge: "AWS",
-    icon: <FaAws />, 
-    title: "AWS Academy Graduate - Cloud Developing", 
+const certifications = [
+  {
+    id: "aws",
+    icon: <FaAws />,
+    title: "AWS Academy Graduate — Cloud Developing",
     org: "Amazon Web Services",
-    desc: "Certified in building cloud applications on AWS infrastructure",
-    certImage: "/aws-cloud-developing-cert.pdf",
-    badgeImage: "/aws-academy-badge.png"
+    desc: "Certified in building cloud applications on AWS infrastructure.",
+    cert: "/aws-cloud-developing-cert.pdf",
+    badge: "/aws-academy-badge.png",
+    accent: "#FF9900",
   },
-  { 
-    badge: "HTML/CSS",
-    icon: <FaCertificate />, 
-    title: "IT Specialist - HTML and CSS", 
+  {
+    id: "htmlcss",
+    icon: <FaCertificate />,
+    title: "IT Specialist — HTML and CSS",
     org: "Certiport",
-    desc: "Certified in web development fundamentals",
-    certImage: "/html-css-cert.pdf",
-    badgeImage: "/html-css-badge.png"
-  }
+    desc: "Certified in web development fundamentals.",
+    cert: "/html-css-cert.pdf",
+    badge: "/html-css-badge.png",
+    accent: "#E34F26",
+  },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.85 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      type: "spring",
-      stiffness: 120,
-      damping: 20
-    }
-  }
-};
-
-import { useState } from "react";
-
 export default function Certifications() {
-  const [selectedCert, setSelectedCert] = useState(null);
-  const [selectedBadge, setSelectedBadge] = useState(null);
+  const [badge, setBadge] = useState(null);
 
   return (
-    <motion.section 
-      id="certifications"
-      className="section certificationsSection"
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6 }}
-    >
-      <motion.h2
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-      >
-        Certifications
-      </motion.h2>
+    <section id="certifications" className="section certificationsSection">
+      <SectionHeading eyebrow="Verified skills" title="Certifications" />
 
-      {/* Certification Cards */}
       <motion.div
-        className="certificationsGrid"
-        variants={containerVariants}
+        className="certGrid"
+        variants={stagger(0.1, 0.05)}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true }}
+        viewport={viewport}
       >
-        {certifications.map((cert, i) => (
-          <motion.div 
-            key={i} 
-            className={`certificationCard ${selectedCert === i ? 'selected' : ''}`}
-            variants={itemVariants}
-            whileHover={{ scale: 1.03, y: -5 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setSelectedCert(selectedCert === i ? null : i)}
-            style={{ cursor: 'pointer' }}
-          >
-            <motion.div 
-              className="certificationIcon"
-              whileHover={{ rotate: 10, scale: 1.1 }}
-              transition={{ duration: 0.3 }}
-            >
-              {cert.icon}
-            </motion.div>
-            <div className="certificationContent">
-              <h3>{cert.title}</h3>
-              <span className="certOrg">{cert.org}</span>
-              <p>{cert.desc}</p>
-              {cert.badgeImage && (
-                <motion.button
-                  className="badge-view-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedBadge(cert.badgeImage);
-                  }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  style={{
-                    marginTop: '0.75rem',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '8px',
-                    border: 'none',
-                    background: 'linear-gradient(135deg, #FF9900, #FFB84D)',
-                    color: '#fff',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem'
-                  }}
+        {certifications.map((c) => (
+          <motion.div key={c.id} variants={cardIn}>
+            <TiltCard className="certCard" max={7} style={{ "--accent": c.accent }}>
+              <span className="certIcon">{c.icon}</span>
+              <h3 className="certTitle">{c.title}</h3>
+              <span className="certOrg">{c.org}</span>
+              <p className="certDesc">{c.desc}</p>
+
+              <div className="certActions">
+                <a
+                  href={c.cert}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btnGhost btnSm"
                 >
-                  <FaAws /> View Badge
-                </motion.button>
-              )}
-            </div>
+                  Certificate <FaArrowUpRightFromSquare className="btnTrail" />
+                </a>
+                <button
+                  className="btn btnAccent btnSm"
+                  onClick={() => setBadge(c)}
+                >
+                  View Badge
+                </button>
+              </div>
+            </TiltCard>
           </motion.div>
         ))}
       </motion.div>
 
-      {/* Certificate Modal */}
-      {selectedCert !== null && (
-        <motion.div 
-          className="certModal"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          onClick={() => setSelectedCert(null)}
-        >
-          <motion.div 
-            className="certModalContent"
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            onClick={(e) => e.stopPropagation()}
+      <AnimatePresence>
+        {badge && (
+          <motion.div
+            className="modalBg"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: dur.fast }}
+            onClick={() => setBadge(null)}
           >
-            <button className="certClose" onClick={() => setSelectedCert(null)}>×</button>
-            {certifications[selectedCert].certImage.endsWith('.pdf') ? (
-              <div className="certPdfContainer">
-                <a 
-                  href={certifications[selectedCert].certImage} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="certPdfLink"
-                >
-                  Open Certificate (PDF)
-                </a>
-              </div>
-            ) : (
-              <img 
-                src={certifications[selectedCert].certImage} 
-                alt={certifications[selectedCert].title}
-                className="certImage"
+            <motion.div
+              className="badgeModal"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 10 }}
+              transition={spring.base}
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label={`${badge.title} badge`}
+            >
+              <button
+                className="modalClose"
+                onClick={() => setBadge(null)}
+                aria-label="Close"
+              >
+                <FaXmark />
+              </button>
+              <motion.img
+                src={badge.badge}
+                alt={`${badge.title} badge`}
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1, duration: dur.base, ease: ease.out }}
               />
-            )}
+              <p className="badgeCaption">{badge.title}</p>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      )}
-
-      {/* Badge Modal */}
-      {selectedBadge && (
-        <motion.div 
-          className="certModal"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          onClick={() => setSelectedBadge(null)}
-        >
-          <motion.div 
-            className="certModalContent"
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            onClick={(e) => e.stopPropagation()}
-            style={{ maxWidth: '400px' }}
-          >
-            <button className="certClose" onClick={() => setSelectedBadge(null)}>×</button>
-            <img 
-              src={selectedBadge} 
-              alt="Certification Badge"
-              className="certImage"
-              style={{ padding: '1rem' }}
-            />
-          </motion.div>
-        </motion.div>
-      )}
-    </motion.section>
+        )}
+      </AnimatePresence>
+    </section>
   );
 }
-

@@ -1,95 +1,71 @@
 import { motion } from "framer-motion";
-import { FaTrophy, FaMedal } from "react-icons/fa";
+import { FaTrophy, FaMedal } from "react-icons/fa6";
+import SectionHeading from "./SectionHeading";
+import Counter from "./Counter";
+import { viewport, stagger, cardIn, dur, ease } from "../motion";
 
 const achievements = [
-  { 
-    icon: <FaTrophy />, 
-    title: "Smart India Hackathon (SIH) – Internal Hackathon Finalist",
-    description: "Ranked Top 50 out of 300+ teams (Top 16%) in the campus internal round by developing and pitching an innovative, scalable real-world solution, demonstrating strong problem-solving, teamwork, rapid prototyping, and technical presentation skills.",
-    ariaLabel: "Smart India Hackathon"
+  {
+    icon: <FaTrophy />,
+    accent: "#f59e0b",
+    title: "Smart India Hackathon — Internal Finalist",
+    rank: { value: 50, prefix: "Top ", suffix: "" },
+    context: "of 300+ teams",
+    description:
+      "Ranked in the top 16% at the campus internal round by developing and pitching an innovative, scalable real-world solution — demonstrating problem-solving, teamwork, rapid prototyping and technical presentation.",
   },
-  { 
-    icon: <FaMedal />, 
+  {
+    icon: <FaMedal />,
+    accent: "#22d3ee",
     title: "GeeksforGeeks HackSprint",
-    description: "Secured 6th position out of 150+ teams by designing and delivering a fully functional solution under strict time constraints, recognized for technical excellence, innovation, and impactful presentation.",
-    ariaLabel: "GeeksforGeeks HackSprint"
-  }
+    rank: { value: 6, prefix: "#", suffix: "" },
+    context: "of 150+ teams",
+    description:
+      "Secured 6th position by designing and delivering a fully functional solution under strict time constraints, recognised for technical excellence, innovation and impactful presentation.",
+  },
 ];
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.85 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      type: "spring",
-      stiffness: 120,
-      damping: 20
-    }
-  }
-};
 
 export default function Achievements() {
   return (
-    <motion.section 
-      id="achievements"
-      className="section achievementsSection"
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6 }}
-    >
-      <motion.h2
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-      >
-        Achievements
-      </motion.h2>
+    <section id="achievements" className="section achievementsSection">
+      <SectionHeading eyebrow="Recognition" title="Achievements" />
 
-      <motion.div 
+      <motion.div
         className="achievementsGrid"
-        variants={containerVariants}
+        variants={stagger(0.12, 0.05)}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true }}
+        viewport={viewport}
       >
-        {achievements.map((item, i) => (
-          <motion.div 
-            key={i} 
+        {achievements.map((a) => (
+          <motion.article
+            key={a.title}
             className="achievementCard"
-            variants={itemVariants}
-            whileHover={{ scale: 1.03 }}
+            variants={cardIn}
+            style={{ "--accent": a.accent }}
+            whileHover={{ y: -6 }}
+            transition={{ duration: dur.fast, ease: ease.out }}
           >
-            <motion.span 
-              className="achievementIcon"
-              aria-label={item.ariaLabel}
-              animate={{ rotate: [0, 5, -5, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 }}
-            >
-              {item.icon}
-            </motion.span>
-            <div className="achievementContent">
-              <span className="achievementTitle">{item.title}</span>
-              <span className="achievementDescription">{item.description}</span>
+            <span className="achievementGlow" aria-hidden="true" />
+
+            <div className="achievementTop">
+              <span className="achievementIcon">{a.icon}</span>
+              <div className="achievementRank">
+                <Counter
+                  className="rankValue"
+                  value={a.rank.value}
+                  prefix={a.rank.prefix}
+                  suffix={a.rank.suffix}
+                />
+                <span className="rankContext">{a.context}</span>
+              </div>
             </div>
-          </motion.div>
+
+            <h3 className="achievementTitle">{a.title}</h3>
+            <p className="achievementDescription">{a.description}</p>
+          </motion.article>
         ))}
       </motion.div>
-    </motion.section>
+    </section>
   );
 }
-

@@ -1,79 +1,201 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValue,
+  useSpring,
+  useReducedMotion,
+} from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
+import { FaArrowDown, FaFileArrowDown, FaPaperPlane } from "react-icons/fa6";
 import profile from "../assets/profile1.jpg";
+import { ease, dur } from "../motion";
+
+/** Button that leans toward the cursor. */
+function MagneticButton({ children, className, strength = 18, ...rest }) {
+  const reduced = useReducedMotion();
+  const ref = useRef(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 300, damping: 20, mass: 0.5 });
+  const sy = useSpring(y, { stiffness: 300, damping: 20, mass: 0.5 });
+
+  const onMove = (e) => {
+    if (reduced) return;
+    const r = ref.current.getBoundingClientRect();
+    x.set(((e.clientX - r.left) / r.width - 0.5) * strength * 2);
+    y.set(((e.clientY - r.top) / r.height - 0.5) * strength * 2);
+  };
+  const reset = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.a
+      ref={ref}
+      className={className}
+      onPointerMove={onMove}
+      onPointerLeave={reset}
+      style={reduced ? undefined : { x: sx, y: sy }}
+      whileHover={{ scale: 1.04 }}
+      whileTap={{ scale: 0.97 }}
+      {...rest}
+    >
+      {children}
+    </motion.a>
+  );
+}
+
+const NAME = "Yatham Sridhar Reddy";
 
 export default function Hero() {
+  const reduced = useReducedMotion();
+  const ref = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
+
+  const words = NAME.split(" ");
+
   return (
-    <section id="hero" className="hero">
-      <motion.img 
-        src={profile} 
-        alt="Yatham Sridhar Reddy" 
-        className="profilePic"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      />
-
-      <motion.h1
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        Yatham Sridhar Reddy
-      </motion.h1>
+    <section id="hero" className="hero" ref={ref}>
+      {/* Aurora mesh background */}
+      <div className="heroAurora" aria-hidden="true">
+        <span className="auroraBlob blob1" />
+        <span className="auroraBlob blob2" />
+        <span className="auroraBlob blob3" />
+      </div>
+      <div className="heroGrid" aria-hidden="true" />
 
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
+        className="heroInner"
+        style={reduced ? undefined : { y, opacity, scale }}
       >
-        <TypeAnimation
-          sequence={[
-            "Cloud Engineer",
-            1500,
-            "DevOps Engineer",
-            1500,
-            "AWS Developer",
-            1500,
-          ]}
-          repeat={Infinity}
-          className="typing"
-        />
+        {/* Photo with rotating conic ring */}
+        <motion.div
+          className="profileWrap"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: dur.slow, ease: ease.out }}
+        >
+          <span className="profileRing" aria-hidden="true" />
+          <span className="profileHalo" aria-hidden="true" />
+          <motion.img
+            src={profile}
+            alt="Yatham Sridhar Reddy"
+            className="profilePic"
+            whileHover={{ scale: 1.04 }}
+            transition={{ duration: dur.fast, ease: ease.out }}
+          />
+        </motion.div>
+
+        <motion.span
+          className="heroAvailable"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: dur.base, ease: ease.out, delay: 0.15 }}
+        >
+          <span className="availableDot" />
+          Open to Cloud &amp; DevOps roles
+        </motion.span>
+
+        {/* Name, revealed word by word from behind a mask */}
+        <h1 className="heroName">
+          {words.map((word, i) => (
+            <span className="maskLine" key={i}>
+              <motion.span
+                className="maskInner"
+                initial={{ y: "110%" }}
+                animate={{ y: "0%" }}
+                transition={{
+                  duration: dur.slower,
+                  ease: ease.out,
+                  delay: 0.25 + i * 0.09,
+                }}
+              >
+                {word}
+              </motion.span>
+            </span>
+          ))}
+        </h1>
+
+        <motion.div
+          className="heroRole"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: dur.base, delay: 0.7 }}
+        >
+          <TypeAnimation
+            sequence={[
+              "Cloud Engineer",
+              1600,
+              "DevOps Engineer",
+              1600,
+              "AWS Developer",
+              1600,
+            ]}
+            repeat={Infinity}
+            className="typing"
+            cursor
+          />
+        </motion.div>
+
+        <motion.p
+          className="heroTagline"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: dur.base, ease: ease.out, delay: 0.8 }}
+        >
+          I build scalable, automated infrastructure on AWS — from CI/CD
+          pipelines to containerised, production-ready deployments.
+        </motion.p>
+
+        <motion.div
+          className="heroButtons"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: dur.base, ease: ease.out, delay: 0.9 }}
+        >
+          <MagneticButton
+            href="/sridhar_final-resume.pdf"
+            download="Yatham_Sridhar_Reddy_Resume.pdf"
+            className="btn btnPrimary"
+          >
+            <FaFileArrowDown />
+            Download Resume
+          </MagneticButton>
+
+          <MagneticButton href="#contact" className="btn btnGhost">
+            <FaPaperPlane />
+            Let&apos;s Connect
+          </MagneticButton>
+        </motion.div>
       </motion.div>
 
-      <motion.div
-        className="heroButtons"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.6 }}
+      <motion.a
+        href="#about"
+        className="scrollCue"
+        aria-label="Scroll to About"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.3, duration: dur.base }}
       >
-        <motion.a 
-          href="/sridhar_final-resume.pdf" 
-          download 
-          className="resumeBtn"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Download Resume
-        </motion.a>
-        
-        <motion.a 
-          href="#contact" 
-          className="hireMeBtn"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.95 }}
-        >
-Let's Connect
-        </motion.a>
-      </motion.div>
+        <span className="scrollCueTrack">
+          <motion.span
+            className="scrollCueDot"
+            animate={reduced ? {} : { y: [0, 14, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </span>
+        <FaArrowDown />
+      </motion.a>
     </section>
   );
 }

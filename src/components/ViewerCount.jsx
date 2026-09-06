@@ -1,73 +1,49 @@
-import { useState, useEffect } from 'react';
-import { ref, runTransaction, onValue } from 'firebase/database';
-import { database } from '../firebase';
-import { FaEye } from 'react-icons/fa';
+import { useState, useEffect } from "react";
+import { ref, runTransaction, onValue } from "firebase/database";
+import { motion } from "framer-motion";
+import { FaEye } from "react-icons/fa6";
+import { database } from "../firebase";
+import { ease, dur } from "../motion";
 
-const VIEW_COUNT_KEY = 'portfolio_view_counted';
+const VIEW_COUNT_KEY = "portfolio_view_counted";
 
 export default function ViewerCount() {
-  const [viewCount, setViewCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [showCounter, setShowCounter] = useState(false);
+  const [count, setCount] = useState(null);
 
   useEffect(() => {
-    // Check if this page load has already counted a view
-    const hasCounted = sessionStorage.getItem(VIEW_COUNT_KEY);
-    
-    const viewsRef = ref(database, 'views');
+    const viewsRef = ref(database, "views");
 
-    // Function to increment view count using transaction
-    const incrementViewCount = async () => {
-      try {
-        await runTransaction(viewsRef, (currentViews) => {
-          // If no views yet, start at 1, otherwise increment
-          if (currentViews === null) {
-            return 1;
-          }
-          return (currentViews || 0) + 1;
-        });
-        
-        // Mark this session as counted
-        sessionStorage.setItem(VIEW_COUNT_KEY, 'true');
-      } catch (err) {
-        console.log('Firebase transaction error (database may not be set up yet)');
-      }
-    };
-
-    // Only increment if this session hasn't counted yet
-    if (!hasCounted) {
-      incrementViewCount();
+    if (!sessionStorage.getItem(VIEW_COUNT_KEY)) {
+      runTransaction(viewsRef, (current) => (current || 0) + 1)
+        .then(() => sessionStorage.setItem(VIEW_COUNT_KEY, "true"))
+        .catch(() => {});
     }
 
-    // Listen for real-time updates
-    const unsubscribe = onValue(viewsRef, (snapshot) => {
-      const views = snapshot.val();
-      if (views !== null) {
-        setViewCount(views);
-        setShowCounter(true);
-      }
-      setIsLoading(false);
-    }, (err) => {
-      console.log('Firebase read error:', err.message);
-      // Show counter anyway for demo purposes
-      setShowCounter(true);
-      setIsLoading(false);
-    });
+    const unsub = onValue(
+      viewsRef,
+      (snap) => {
+        const v = snap.val();
+        if (v !== null && v !== undefined) setCount(v);
+      },
+      () => {}
+    );
 
-    // Cleanup subscription on unmount
-    return () => {
-      unsubscribe();
-    };
+    return () => unsub();
   }, []);
 
-  // Always render (for demo), show loading or actual count
+  // Stay hidden until we actually have a number worth showing.
+  if (count === null) return null;
+
   return (
-    <div className="viewer-count" title={`${viewCount.toLocaleString()} total views`}>
-      <FaEye className="viewer-icon" />
-      <span className="viewer-number">
-        {isLoading ? '---' : viewCount > 0 ? viewCount.toLocaleString() : '0'}
-      </span>
-    </div>
+    <motion.div
+      className="viewerCount"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: dur.base, ease: ease.out, delay: 1.6 }}
+      title={`${count.toLocaleString()} total views`}
+    >
+      <FaEye />
+      <span>{count.toLocaleString()}</span>
+    </motion.div>
   );
 }
-
