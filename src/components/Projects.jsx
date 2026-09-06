@@ -3,40 +3,34 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowRight } from "react-icons/fa6";
 import ProjectModal from "./ProjectModal";
 import SectionHeading from "./SectionHeading";
-import arch1 from "../assets/aws-arch1.png";
-import arch2 from "../assets/aws-arch2.png";
+import carCover from "../assets/car-game-cover.webp";
+import carPoster from "../assets/car-game-poster.webp";
+import carArch from "../assets/car-game-architecture.webp";
+import cloudCover from "../assets/cloud-compare-cover.webp";
 import { stagger, cardIn, viewport, dur, ease } from "../motion";
 
 const projects = [
   {
-    id: "codesync",
-    title: "CodeSync",
-    tagline: "Coding activity automation with AWS SNS",
-    desc: "A Flask service that tracks coding activity and pushes notification automation through AWS SNS, keeping teams in sync without manual check-ins.",
-    tags: ["Flask", "AWS SNS", "Python", "REST"],
-    arch: arch1,
-    images: [
-      "/project2-image1.jpeg",
-      "/project2-image2.jpeg",
-      "/project2-image3.jpeg",
-      "/project2-image4.jpeg",
-    ],
-    link: "https://github.com/yathamsridharreddy/aws-cloud-projects/tree/main/CodeSync",
+    id: "sridhar-rush",
+    title: "Sridhar Rush",
+    tagline: "Real-time multiplayer racing where your phone is the controller",
+    desc: "A real-time 3D racing game that splits the console in two: the laptop renders the race while phones become wireless gamepads over a QR scan, with no install or sign-up. A 30Hz authoritative relay keeps players in sync across the internet, backed by Supabase for leaderboards and ghost laps. Ships five race modes and five circuits, plus an installable PWA build and an offline AI opponent for solo play.",
+    tags: ["JavaScript", "WebSockets", "Node.js", "Supabase", "PWA", "Vercel"],
+    thumb: carCover,
+    images: [carPoster, carArch],
+    demo: "https://sridhar-drift.vercel.app/",
+    link: "https://github.com/yathamsridharreddy/MULTIPLAYER-CAR-GAME",
   },
   {
-    id: "cloudsmiths",
-    title: "CloudSmiths",
-    tagline: "Scalable platform on EC2, RDS, S3 and Docker",
-    desc: "A containerised cloud platform deployed across EC2 and RDS with S3-backed storage, designed for horizontal scale and repeatable deployments.",
-    tags: ["AWS EC2", "RDS", "S3", "Docker"],
-    arch: arch2,
-    images: [
-      "/project-image1.jpeg",
-      "/project-image2.jpeg",
-      "/project-image3.jpeg",
-      "/project-image4.jpeg",
-    ],
-    link: "https://github.com/yathamsridharreddy/aws-cloud-projects/tree/main/CloudSmiths",
+    id: "cloudcompare-ai",
+    title: "CloudCompare AI",
+    tagline: "Multi-cloud comparison and recommendation platform",
+    desc: "A full-stack platform that evaluates infrastructure across AWS, Azure, Google Cloud, Oracle Cloud and Alibaba Cloud, weighing compute, storage, pricing estimates, performance and regional availability to produce ranked recommendations by cost or performance priority. The production stack runs a React build on S3 behind API Gateway, with a Dockerised Spring Boot API on EC2 and a private RDS MySQL instance, all provisioned reproducibly through Terraform.",
+    tags: ["Java 21", "Spring Boot", "React 19", "AWS", "Terraform", "Docker", "Jenkins"],
+    thumb: cloudCover,
+    images: [],
+    demo: "https://cloud-compareai.vercel.app/",
+    link: "https://github.com/yathamsridharreddy/CLOUD-COMPARE-AI",
   },
 ];
 
@@ -76,8 +70,8 @@ export default function Projects() {
             <div className="projectThumb">
               <motion.img
                 layoutId={`thumb-${p.id}`}
-                src={p.arch}
-                alt={`${p.title} architecture diagram`}
+                src={p.thumb}
+                alt={`${p.title} cover art`}
                 loading="lazy"
               />
               <span className="projectShine" aria-hidden="true" />

@@ -61,7 +61,7 @@ src/
   firebase.js               Firebase app + Realtime Database init
   style.css                 all global styles
   assets/                   images imported by JS (hashed + bundled by Vite)
-    profile1.jpg, aws-arch1.png, aws-arch2.png
+    profile1.jpg, car-game-*.webp, cloud-compare-cover.webp
   components/
     Navbar.jsx              fixed nav, theme toggle, scroll-spy, mobile menu
     ViewerCount.jsx         live view counter badge

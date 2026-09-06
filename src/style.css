@@ -1223,6 +1223,12 @@ body.light .auroraBlob {
 .modalLink {
   margin-top: 0.4rem;
 }
+.modalActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 0.9rem;
+}
 
 /* Lightbox */
 .lightbox {

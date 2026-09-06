@@ -11,13 +11,13 @@ const items = [
   },
   {
     year: "Project",
-    title: "Developed CodeSync",
-    body: "A coding activity automation system built on Flask with AWS SNS notification integration.",
+    title: "Built Sridhar Rush",
+    body: "A real-time multiplayer racing game turning phones into wireless controllers over a 30Hz WebSocket relay.",
   },
   {
     year: "Project",
-    title: "Developed CloudSmiths",
-    body: "A cloud-based platform deployed on AWS with EC2, RDS, S3 and Docker.",
+    title: "Built CloudCompare AI",
+    body: "A multi-cloud comparison platform on Spring Boot and React, provisioned across AWS with Terraform.",
   },
   {
     year: "Now",

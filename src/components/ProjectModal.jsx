@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FaXmark, FaChevronLeft, FaChevronRight, FaGithub, FaImages,
+  FaArrowUpRightFromSquare,
 } from "react-icons/fa6";
 import { ease, dur, spring } from "../motion";
 
@@ -86,8 +87,8 @@ export default function ProjectModal({ project, close }) {
           <div className="modalMedia">
             <motion.img
               layoutId={`thumb-${project.id}`}
-              src={project.arch}
-              alt={`Architecture diagram for ${project.title}`}
+              src={project.thumb}
+              alt={`${project.title} cover art`}
             />
             {count > 0 && (
               <button
@@ -97,7 +98,7 @@ export default function ProjectModal({ project, close }) {
                   setCarousel(true);
                 }}
               >
-                <FaImages /> {count} screenshots
+                <FaImages /> {count} {count === 1 ? "image" : "images"}
               </button>
             )}
           </div>
@@ -120,14 +121,26 @@ export default function ProjectModal({ project, close }) {
                 ))}
               </ul>
 
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btnPrimary modalLink"
-              >
-                <FaGithub /> View on GitHub
-              </a>
+              <div className="modalActions">
+                {project.demo && (
+                  <a
+                    href={project.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btnPrimary modalLink"
+                  >
+                    <FaArrowUpRightFromSquare /> Live demo
+                  </a>
+                )}
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btnGhost modalLink"
+                >
+                  <FaGithub /> View code
+                </a>
+              </div>
             </motion.div>
           </div>
         </motion.div>
@@ -162,7 +175,7 @@ export default function ProjectModal({ project, close }) {
               <motion.img
                 key={index}
                 src={project.images[index]}
-                alt={`${project.title} screenshot ${index + 1}`}
+                alt={`${project.title} image ${index + 1}`}
                 className="lightboxImage"
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
