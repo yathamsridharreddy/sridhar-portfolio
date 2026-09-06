@@ -30,6 +30,7 @@ const certifications = [
     desc: "Validates building applications against MongoDB using drivers, indexes and the document model.",
     skills: ["MongoDB", "Node.js", "Data Modeling", "CRUD", "MongoDB Indexes", "JavaScript"],
     cert: "/mongodb-associate-cert.pdf",
+    badge: "/mongodb-associate-badge.png",
     verify:
       "https://www.credly.com/earner/earned/badge/223f1b98-5876-4ec0-9bd1-fe7f8ea66b7a",
     accent: "#47A248",
