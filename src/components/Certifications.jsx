@@ -17,6 +17,7 @@ const certifications = [
     org: "Amazon Web Services Training and Certification",
     desc: "Validates developing, deploying and debugging cloud-native applications on AWS.",
     skills: ["AWS", "AWS Cloud", "Code Development", "Code Deployment", "Cloud Certification"],
+    cert: "/aws-developer-associate-cert.pdf",
     verify:
       "https://www.credly.com/earner/earned/badge/b6c2f79f-6f9f-466e-9305-befe9506f910",
     accent: "#FF9900",
@@ -28,6 +29,7 @@ const certifications = [
     org: "MongoDB",
     desc: "Validates building applications against MongoDB using drivers, indexes and the document model.",
     skills: ["MongoDB", "Node.js", "Data Modeling", "CRUD", "MongoDB Indexes", "JavaScript"],
+    cert: "/mongodb-associate-cert.pdf",
     verify:
       "https://www.credly.com/earner/earned/badge/223f1b98-5876-4ec0-9bd1-fe7f8ea66b7a",
     accent: "#47A248",
