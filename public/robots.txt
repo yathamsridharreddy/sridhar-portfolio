@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://yathamsridharreddy.github.io/sridhar-portfolio/sitemap.xml
+Sitemap: https://yathamsridharreddy.vercel.app/sitemap.xml
