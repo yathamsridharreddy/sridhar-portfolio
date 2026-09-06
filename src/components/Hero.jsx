@@ -1,53 +1,12 @@
 import { useRef } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useMotionValue,
-  useSpring,
-  useReducedMotion,
-} from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
+import MagneticButton from "./MagneticButton";
 import { FaArrowDown, FaFileArrowDown, FaPaperPlane } from "react-icons/fa6";
 import profile from "../assets/profile1.jpg";
 import { ease, dur } from "../motion";
 
 /** Button that leans toward the cursor. */
-function MagneticButton({ children, className, strength = 18, ...rest }) {
-  const reduced = useReducedMotion();
-  const ref = useRef(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const sx = useSpring(x, { stiffness: 300, damping: 20, mass: 0.5 });
-  const sy = useSpring(y, { stiffness: 300, damping: 20, mass: 0.5 });
-
-  const onMove = (e) => {
-    if (reduced) return;
-    const r = ref.current.getBoundingClientRect();
-    x.set(((e.clientX - r.left) / r.width - 0.5) * strength * 2);
-    y.set(((e.clientY - r.top) / r.height - 0.5) * strength * 2);
-  };
-  const reset = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  return (
-    <motion.a
-      ref={ref}
-      className={className}
-      onPointerMove={onMove}
-      onPointerLeave={reset}
-      style={reduced ? undefined : { x: sx, y: sy }}
-      whileHover={{ scale: 1.04 }}
-      whileTap={{ scale: 0.97 }}
-      {...rest}
-    >
-      {children}
-    </motion.a>
-  );
-}
-
 const NAME = "Yatham Sridhar Reddy";
 
 export default function Hero() {

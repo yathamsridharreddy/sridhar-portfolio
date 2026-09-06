@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowRight } from "react-icons/fa6";
 import ProjectModal from "./ProjectModal";
 import SectionHeading from "./SectionHeading";
+import Parallax from "./Parallax";
 import carCover from "../assets/car-game-cover.webp";
 import carPoster from "../assets/car-game-poster.webp";
 import carArch from "../assets/car-game-architecture.webp";
@@ -39,6 +40,7 @@ export default function Projects() {
 
   return (
     <section id="projects" className="section projectsSection">
+      <Parallax className="sectionGlow at-left" speed={-55} aria-hidden="true" />
       <SectionHeading eyebrow="Things I have built" title="Projects" />
 
       <motion.div

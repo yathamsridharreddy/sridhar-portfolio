@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
+import Parallax from "./Parallax";
 import Counter from "./Counter";
 import { fadeUp, stagger, viewport, cardIn } from "../motion";
 
@@ -13,6 +14,7 @@ const stats = [
 export default function About() {
   return (
     <section id="about" className="section aboutSection">
+      <Parallax className="sectionGlow at-left" speed={-45} aria-hidden="true" />
       <SectionHeading eyebrow="Who I am" title="About Me" />
 
       <motion.div

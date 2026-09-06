@@ -88,3 +88,47 @@ export const flatten = (variants) => ({
 /** Picks between a full variant and its reduced-motion equivalent. */
 export const motionSafe = (reduced, variants) =>
   reduced ? flatten(variants) : variants;
+
+// ===== Additional entrances =====
+// Used to give each section family its own character instead of every grid
+// sharing one card reveal.
+
+/** Springy pop — good for badges, icons and small tiles. */
+export const popIn = {
+  hidden: { opacity: 0, scale: 0.82 },
+  visible: { opacity: 1, scale: 1, transition: spring.bouncy },
+};
+
+/** Tilts up into place around the X axis. Needs perspective on the parent. */
+export const flipIn = {
+  hidden: { opacity: 0, rotateX: -14, y: 22 },
+  visible: {
+    opacity: 1,
+    rotateX: 0,
+    y: 0,
+    transition: { duration: dur.slow, ease: ease.out },
+  },
+};
+
+/** A single word rising out of its mask. Pair with `stagger` on the parent. */
+export const wordRise = {
+  hidden: { y: "110%" },
+  visible: { y: "0%", transition: { duration: dur.slow, ease: ease.out } },
+};
+
+/** Card entrance that also comes in from a side — alternate per column. */
+export const cardInFrom = (from = "left", distance = 40) => ({
+  hidden: {
+    opacity: 0,
+    y: 20,
+    x: from === "left" ? -distance : distance,
+    scale: 0.97,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    x: 0,
+    scale: 1,
+    transition: spring.gentle,
+  },
+});

@@ -5,6 +5,7 @@ import {
   FaDatabase, FaListCheck, FaCode,
 } from "react-icons/fa6";
 import SectionHeading from "./SectionHeading";
+import Parallax from "./Parallax";
 import { stagger, cardIn, viewport, dur, ease } from "../motion";
 
 const categories = [
@@ -40,6 +41,25 @@ const categories = [
   },
 ];
 
+const marqueeSkills = categories.flatMap((c) => c.skills);
+
+function Marquee() {
+  // Two identical runs; the track shifts by exactly half its width.
+  const run = [...marqueeSkills, ...marqueeSkills];
+  return (
+    <div className="marquee" aria-hidden="true">
+      <div className="marqueeTrack">
+        {run.map((s, i) => (
+          <span className="marqueeItem" key={`${s.name}-${i}`}>
+            {s.icon}
+            {s.name}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function SkillCard({ skill }) {
   return (
     <motion.div
@@ -59,6 +79,7 @@ function SkillCard({ skill }) {
 export default function Skills() {
   return (
     <section id="skills" className="section skillsSection">
+      <Parallax className="sectionGlow at-right" speed={-50} aria-hidden="true" />
       <SectionHeading eyebrow="What I work with" title="Skills" />
 
       {categories.map((category, i) => (
@@ -88,6 +109,8 @@ export default function Skills() {
           </motion.div>
         </motion.div>
       ))}
+
+      <Marquee />
     </section>
   );
 }

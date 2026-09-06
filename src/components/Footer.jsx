@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { FaGithub, FaLinkedin, FaEnvelope, FaArrowUp } from "react-icons/fa6";
+import MagneticButton from "./MagneticButton";
 import { viewport, dur, ease } from "../motion";
 
 const socials = [
@@ -43,9 +44,9 @@ export default function Footer() {
 
       <div className="footerBottom">
         <span>© {new Date().getFullYear()} Yatham Sridhar Reddy</span>
-        <a href="#hero" className="backToTop">
+        <MagneticButton href="#hero" className="backToTop" strength={12}>
           Back to top <FaArrowUp />
-        </a>
+        </MagneticButton>
       </div>
     </motion.footer>
   );

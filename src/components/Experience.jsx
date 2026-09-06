@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { FaBriefcase, FaCertificate, FaArrowUpRightFromSquare } from "react-icons/fa6";
 import SectionHeading from "./SectionHeading";
+import Parallax from "./Parallax";
 import TiltCard from "./TiltCard";
 import { viewport, dur, ease, stagger, cardIn } from "../motion";
 
@@ -22,6 +23,7 @@ const items = [
 export default function Experience() {
   return (
     <section id="experience" className="section experienceSection">
+      <Parallax className="sectionGlow at-right" speed={-40} aria-hidden="true" />
       <SectionHeading eyebrow="Where I have worked" title="Experience" />
 
       <motion.div

@@ -4,6 +4,7 @@ import {
   FaEnvelope, FaGithub, FaLinkedin, FaPhone, FaPaperPlane, FaCircleCheck,
 } from "react-icons/fa6";
 import SectionHeading from "./SectionHeading";
+import Parallax from "./Parallax";
 import { viewport, stagger, cardIn, dur, ease, spring } from "../motion";
 
 const contactInfo = [
@@ -68,6 +69,7 @@ export default function Contact() {
 
   return (
     <section id="contact" className="section contactSection">
+      <Parallax className="sectionGlow at-right" speed={-50} aria-hidden="true" />
       <SectionHeading eyebrow="Say hello" title="Contact" />
 
       <div className="contactLayout">

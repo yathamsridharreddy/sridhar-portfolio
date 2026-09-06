@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { FaTrophy, FaMedal } from "react-icons/fa6";
 import SectionHeading from "./SectionHeading";
+import Parallax from "./Parallax";
 import Counter from "./Counter";
 import { viewport, stagger, cardIn, dur, ease } from "../motion";
 
@@ -28,6 +29,7 @@ const achievements = [
 export default function Achievements() {
   return (
     <section id="achievements" className="section achievementsSection">
+      <Parallax className="sectionGlow at-left" speed={-45} aria-hidden="true" />
       <SectionHeading eyebrow="Recognition" title="Achievements" />
 
       <motion.div

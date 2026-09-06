@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaAws, FaCertificate, FaXmark, FaArrowUpRightFromSquare } from "react-icons/fa6";
 import { SiMongodb } from "react-icons/si";
 import SectionHeading from "./SectionHeading";
+import Parallax from "./Parallax";
 import TiltCard from "./TiltCard";
 import { viewport, stagger, cardIn, dur, ease, spring } from "../motion";
 
@@ -56,6 +57,7 @@ export default function Certifications() {
 
   return (
     <section id="certifications" className="section certificationsSection">
+      <Parallax className="sectionGlow at-right" speed={-50} aria-hidden="true" />
       <SectionHeading eyebrow="Verified skills" title="Certifications" />
 
       <motion.div
