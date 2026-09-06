@@ -20,9 +20,14 @@ const items = [
     body: "A multi-cloud comparison platform on Spring Boot and React, provisioned across AWS with Terraform.",
   },
   {
+    year: "Certified",
+    title: "Earned AWS Certified Developer – Associate",
+    body: "Validated serverless, IaC and CI/CD skills against AWS production standards, alongside the MongoDB Associate Developer certification.",
+  },
+  {
     year: "Now",
-    title: "Advancing Toward AWS Developer Certification",
-    body: "Deepening serverless, IaC and CI/CD expertise for production-grade systems.",
+    title: "Going Deeper on Kubernetes and Observability",
+    body: "Moving from single services to orchestrated, monitored deployments across multi-account AWS environments.",
   },
 ];
 
