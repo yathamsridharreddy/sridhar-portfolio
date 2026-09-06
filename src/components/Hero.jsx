@@ -2,14 +2,6 @@ import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import profile from "../assets/profile1.jpg";
 
-const itemVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0.6 }
-  }
-};
-
 export default function Hero() {
   return (
     <section id="hero" className="hero">

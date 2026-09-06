@@ -55,9 +55,6 @@ export default function ProjectModal({ project, close }) {
       <motion.div 
         className="modalBg" 
         onClick={close}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -65,6 +62,9 @@ export default function ProjectModal({ project, close }) {
       >
         <motion.div 
           className="modal" 
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
           onClick={(e) => e.stopPropagation()}
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}

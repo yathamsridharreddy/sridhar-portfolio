@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaEnvelope, FaGithub, FaLinkedin, FaPhone, FaPaperPlane, FaSpinner } from "react-icons/fa";
 
 const contactInfo = [
-  { icon: <FaEnvelope />, text: "yathamsridharreddy99@gmail.com", href: "mailto:yathamsridharreddy99@gmail.com" },
-  { icon: <FaGithub />, text: "github.com/yathamsridharreddy", href: "https://github.com/yathamsridharreddy" },
-  { icon: <FaLinkedin />, text: "linkedin.com/in/yatham-sridhar-reddy", href: "https://www.linkedin.com/in/yatham-sridhar-reddy-744177374/" },
-  { icon: <FaPhone />, text: "+91 7207580938", href: "tel:+917207580938" }
+  { icon: <FaEnvelope />, text: "yathamsridharreddy99@gmail.com", href: "mailto:yathamsridharreddy99@gmail.com", external: false },
+  { icon: <FaGithub />, text: "github.com/yathamsridharreddy", href: "https://github.com/yathamsridharreddy", external: true },
+  { icon: <FaLinkedin />, text: "linkedin.com/in/yatham-sridhar-reddy", href: "https://www.linkedin.com/in/yatham-sridhar-reddy-744177374/", external: true },
+  { icon: <FaPhone />, text: "+91 7207580938", href: "tel:+917207580938", external: false }
 ];
 
 const itemVariants = {
@@ -102,8 +102,8 @@ export default function Contact() {
           >
             <motion.a 
               href={info.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={info.external ? "_blank" : undefined}
+              rel={info.external ? "noopener noreferrer" : undefined}
               whileHover={{ scale: 1.05, x: 5 }}
               whileTap={{ scale: 0.95 }}
               style={{ 

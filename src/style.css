@@ -152,6 +152,8 @@ body.dark .nav {
   color: var(--dark-accent);
   display: flex;
   align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 body.light .navLogo {
@@ -182,6 +184,14 @@ body.light .logoLetter {
 
 .navLinks {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
@@ -222,6 +232,102 @@ body.dark .navLink.active {
 }
 
 /* ===== Mobile Navigation ===== */
+.menuToggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+body.light .menuToggle {
+  color: var(--light-text-primary);
+  border-color: var(--light-border);
+}
+
+body.dark .menuToggle {
+  color: var(--dark-text-primary);
+  border-color: var(--dark-border);
+}
+
+.mobileMenuOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 1001;
+}
+
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(78vw, 300px);
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 5rem 1.25rem 2rem;
+  overflow-y: auto;
+}
+
+body.light .mobileMenu {
+  background: var(--light-bg-secondary);
+  border-left: 1px solid var(--light-border);
+  box-shadow: -8px 0 30px var(--light-shadow);
+}
+
+body.dark .mobileMenu {
+  background: var(--dark-bg-secondary);
+  border-left: 1px solid var(--dark-border);
+  box-shadow: -8px 0 30px var(--dark-shadow);
+}
+
+.mobileNavLink {
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+}
+
+body.light .mobileNavLink {
+  color: var(--light-text-secondary);
+}
+
+body.dark .mobileNavLink {
+  color: var(--dark-text-secondary);
+}
+
+body.light .mobileNavLink:hover,
+body.light .mobileNavLink.active {
+  color: var(--light-accent);
+  background: rgba(13, 148, 136, 0.12);
+}
+
+body.dark .mobileNavLink:hover,
+body.dark .mobileNavLink.active {
+  color: var(--dark-accent);
+  background: rgba(34, 211, 238, 0.12);
+}
+
+@media (max-width: 1024px) {
+  .navLinks {
+    display: none;
+  }
+
+  .menuToggle {
+    display: inline-flex;
+  }
+}
+
 @media (max-width: 768px) {
   .nav {
     padding: 0.75rem 1rem;
@@ -231,16 +337,13 @@ body.dark .navLink.active {
     font-size: 1.2rem;
   }
   
-  .navLinks {
-    gap: 0.25rem;
-  }
-  
-  .navLink {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.8rem;
-  }
-  
   .toggle {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+  }
+
+  .menuToggle {
     width: 38px;
     height: 38px;
     font-size: 1rem;
@@ -248,7 +351,7 @@ body.dark .navLink.active {
   
   .viewer-count {
     top: 0.75rem;
-    right: 4.5rem;
+    right: 8rem;
     padding: 0.4rem 0.75rem;
     font-size: 0.8rem;
   }
@@ -259,13 +362,9 @@ body.dark .navLink.active {
 }
 
 @media (max-width: 480px) {
-  .navLinks {
-    display: none;
-  }
-  
   .viewer-count {
     top: 0.6rem;
-    right: 4rem;
+    right: 7rem;
     padding: 0.35rem 0.6rem;
     font-size: 0.75rem;
   }
@@ -468,65 +567,6 @@ body.dark .hero h1 {
   font-size: 1.5rem;
 }
 
-/* Legacy Profile Badges CSS - kept for reference */
-/* ===== Profile Badges ===== */
-.profilesContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.profileBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: all var(--transition-normal);
-}
-
-.profileBadge.cloud {
-  background: linear-gradient(135deg, rgba(255, 153, 0, 0.15), rgba(255, 204, 0, 0.08));
-  color: #FF9900;
-  border: 1px solid rgba(255, 153, 0, 0.25);
-}
-
-.profileBadge.devops {
-  background: linear-gradient(135deg, rgba(50, 108, 229, 0.15), rgba(91, 155, 213, 0.08));
-  color: #5B9BD5;
-  border: 1px solid rgba(50, 108, 229, 0.25);
-}
-
-.profileBadge.aws {
-  background: linear-gradient(135deg, rgba(255, 153, 0, 0.15), rgba(255, 87, 34, 0.08));
-  color: #FF9900;
-  border: 1px solid rgba(255, 153, 0, 0.25);
-}
-
-.profileBadge:hover {
-  transform: translateY(-3px) scale(1.05);
-}
-
-.profileBadge.cloud:hover {
-  box-shadow: 0 8px 25px rgba(255, 153, 0, 0.3);
-}
-
-.profileBadge.devops:hover {
-  box-shadow: 0 8px 25px rgba(50, 108, 229, 0.3);
-}
-
-.profileBadge.aws:hover {
-  box-shadow: 0 8px 25px rgba(255, 87, 34, 0.3);
-}
-
-.profileSymbol {
-  font-size: 1.2rem;
-}
-
 .resumeBtn {
   display: inline-flex;
   align-items: center;
@@ -614,9 +654,7 @@ body.dark .hireMeBtn:hover {
   margin: 0 auto;
 }
 
-/* ===== Service Grid ===== */
-.serviceGrid,
-.skillGrid,
+/* ===== Project Grid ===== */
 .projectsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -625,8 +663,6 @@ body.dark .hireMeBtn:hover {
 }
 
 /* ===== Card Styles ===== */
-.serviceCard,
-.skillCard,
 .card {
   padding: 2rem;
   border-radius: 16px;
@@ -638,57 +674,27 @@ body.dark .hireMeBtn:hover {
   gap: 1rem;
 }
 
-body.light .serviceCard,
-body.light .skillCard,
 body.light .card {
   background: var(--light-card-bg);
   border: 1px solid var(--light-border);
   box-shadow: 0 4px 20px var(--light-shadow);
 }
 
-body.light .serviceCard:hover,
-body.light .skillCard:hover,
 body.light .card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 40px rgba(13, 148, 136, 0.2);
 }
 
-body.dark .serviceCard,
-body.dark .skillCard,
 body.dark .card {
   background: var(--dark-card-bg);
   border: 1px solid var(--dark-border);
   box-shadow: 0 4px 20px var(--dark-shadow);
 }
 
-body.dark .serviceCard:hover,
-body.dark .skillCard:hover,
 body.dark .card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 40px rgba(34, 211, 238, 0.2);
   border-color: var(--dark-accent);
-}
-
-/* Service Card Icons */
-.serviceCard svg,
-.skillCard svg {
-  font-size: 2.5rem;
-  transition: transform var(--transition-normal);
-}
-
-body.light .serviceCard svg,
-body.light .skillCard svg {
-  color: var(--light-accent);
-}
-
-body.dark .serviceCard svg,
-body.dark .skillCard svg {
-  color: var(--dark-accent);
-}
-
-.serviceCard:hover svg,
-.skillCard:hover svg {
-  transform: scale(1.15);
 }
 
 /* ===== Timeline Styles ===== */
@@ -965,15 +971,6 @@ body.dark .achievementDescription {
   color: var(--dark-text-secondary);
 }
 
-/* Achievement icons with brand colors */
-.achievementsSection .achievementIcon svg[aria-label="leetcode"] {
-  color: #FFA116;
-}
-
-.achievementsSection .achievementIcon svg[aria-label="codechef"] {
-  color: #5B4638;
-}
-
 /* ===== Contact Section ===== */
 .contact-info {
   display: flex;
@@ -1152,116 +1149,6 @@ body.dark .send-button:hover {
   }
 }
 
-/* ===== Flip Card Styles ===== */
-.flipCardContainer {
-  perspective: 1000px;
-  cursor: pointer;
-  min-height: 280px;
-}
-
-.flipCard {
-  position: relative;
-  width: 100%;
-  height: 280px;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-}
-
-.flipCardFront,
-.flipCardBack {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  backface-visibility: hidden;
-  transition: all var(--transition-normal);
-}
-
-body.light .flipCardFront {
-  background: var(--light-card-bg);
-  border: 1px solid var(--light-border);
-  box-shadow: 0 4px 20px var(--light-shadow);
-}
-
-body.dark .flipCardFront {
-  background: var(--dark-card-bg);
-  border: 1px solid var(--dark-border);
-  box-shadow: 0 4px 20px var(--dark-shadow);
-}
-
-body.light .flipCardBack {
-  background: linear-gradient(135deg, var(--light-accent), #0d9488);
-  color: white;
-  border: 2px solid var(--light-accent);
-}
-
-body.dark .flipCardBack {
-  background: linear-gradient(135deg, var(--dark-accent), #06b6d4);
-  color: var(--dark-bg);
-  border: 2px solid var(--dark-accent);
-}
-
-.flipCardIcon {
-  font-size: 3.5rem;
-  margin-bottom: 1.5rem;
-  transition: all var(--transition-normal);
-}
-
-body.light .flipCardIcon {
-  color: var(--light-accent);
-}
-
-body.dark .flipCardIcon {
-  color: var(--dark-accent);
-}
-
-.flipCardFront h3 {
-  font-size: 1.35rem;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-body.light .flipCardFront h3 {
-  color: var(--light-text-primary);
-}
-
-body.dark .flipCardFront h3 {
-  color: var(--dark-text-primary);
-}
-
-.flipHint {
-  font-size: 0.85rem;
-  opacity: 0.7;
-  margin-top: 0.5rem;
-}
-
-body.light .flipHint {
-  color: var(--light-text-secondary);
-}
-
-body.dark .flipHint {
-  color: var(--dark-text-secondary);
-}
-
-.flipCardBack p {
-  font-size: 1.05rem;
-  text-align: center;
-  line-height: 1.6;
-}
-
-body.light .flipCardBack p {
-  color: white;
-}
-
-body.dark .flipCardBack p {
-  color: var(--dark-bg);
-}
-
 /* ===== About Section ===== */
 .aboutSection {
   max-width: 1100px;
@@ -1329,7 +1216,6 @@ body.dark .sectionSubtitle {
   color: var(--dark-text-primary);
 }
 
-.highlightGrid,
 .achievementsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -1394,15 +1280,6 @@ body.light .achievementCard span:last-child {
 
 body.dark .achievementCard span:last-child {
   color: var(--dark-text-primary);
-}
-
-/* Achievement icons with brand colors */
-.achievementIcon svg[aria-label="leetcode"] {
-  color: #FFA116;
-}
-
-.achievementIcon svg[aria-label="codechef"] {
-  color: #5B4638;
 }
 
 /* ===== Skills Section - Enhanced Highlighted Styles ===== */
@@ -1651,8 +1528,6 @@ body.dark .skillName {
     padding: 3rem 1.5rem;
   }
   
-  .serviceGrid,
-  .skillGrid,
   .projectsGrid {
     grid-template-columns: 1fr;
   }
@@ -1669,14 +1544,6 @@ body.dark .skillName {
     width: 150px;
     height: 150px;
   }
-  
-  .flipCard {
-    height: 260px;
-  }
-  
-  .flipCardContainer {
-    min-height: 260px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -1691,93 +1558,11 @@ body.dark .skillName {
   .timelineItem {
     padding: 1rem 1rem 1rem 2.5rem;
   }
-  
-  .flipCard {
-    height: 240px;
-  }
-  
-  .flipCardContainer {
-    min-height: 240px;
-  }
-  
-  .flipCardFront,
-  .flipCardBack {
-    padding: 1.5rem;
-  }
-  
-  .flipCardIcon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .flipCardFront h3 {
-    font-size: 1.15rem;
-  }
-  
-  .flipCardBack p {
-    font-size: 0.95rem;
-  }
 }
 
 /* ===== Certifications Section ===== */
 .certificationsSection {
   max-width: 1100px;
-}
-
-.certBadges {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-}
-
-.certBadge {
-  padding: 0.75rem 1.5rem;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: all var(--transition-normal);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 120px;
-}
-
-.certBadgeImage {
-  height: 40px;
-  width: auto;
-  object-fit: contain;
-}
-
-body.light .certBadge {
-  background: var(--light-card-bg);
-  color: var(--light-text-secondary);
-  border-color: var(--light-border);
-}
-
-body.dark .certBadge {
-  background: var(--dark-card-bg);
-  color: var(--dark-text-secondary);
-  border-color: var(--dark-border);
-}
-
-.certBadge.active {
-  background: linear-gradient(135deg, var(--dark-accent), #67e8f9);
-  color: var(--dark-bg);
-  border-color: var(--dark-accent);
-}
-
-body.light .certBadge.active {
-  background: linear-gradient(135deg, var(--light-accent), #5eead4);
-  color: white;
-  border-color: var(--light-accent);
-}
-
-.certBadge:hover {
-  transform: translateY(-2px);
 }
 
 .certificationsGrid {

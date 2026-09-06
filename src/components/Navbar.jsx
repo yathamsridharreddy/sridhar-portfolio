@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { FaMoon, FaSun } from "react-icons/fa";
-import { motion } from "framer-motion";
+import { FaMoon, FaSun, FaBars, FaTimes } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
   { name: "Home", href: "#hero" },
   { name: "About", href: "#about" },
   { name: "Skills", href: "#skills" },
+  { name: "Journey", href: "#journey" },
   { name: "Projects", href: "#projects" },
   { name: "Experience", href: "#experience" },
   { name: "Education", href: "#education" },
@@ -17,14 +18,36 @@ const navItems = [
 
 const logoLetters = "SRIDHAR".split("");
 
+const THEME_KEY = "portfolio-theme";
+
+// Saved choice wins; otherwise follow the OS setting; otherwise dark.
+function getInitialTheme() {
+  if (typeof window === "undefined") return true;
+  const saved = window.localStorage.getItem(THEME_KEY);
+  if (saved === "dark") return true;
+  if (saved === "light") return false;
+  return !window.matchMedia("(prefers-color-scheme: light)").matches;
+}
+
 export default function Navbar() {
-  const [dark, setDark] = useState(true);
+  const [dark, setDark] = useState(getInitialTheme);
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
 
   useEffect(() => {
     document.body.className = dark ? "dark" : "light";
+    window.localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
   }, [dark]);
+
+  // Follow the OS theme until the visitor picks one explicitly.
+  useEffect(() => {
+    if (window.localStorage.getItem(THEME_KEY)) return;
+    const media = window.matchMedia("(prefers-color-scheme: light)");
+    const onChange = (e) => setDark(!e.matches);
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,9 +57,25 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Lock body scroll while the mobile menu is open.
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, []);
+
   useEffect(() => {
     const sections = navItems.map(item => item.href.substring(1));
-    
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -58,11 +97,13 @@ export default function Navbar() {
 
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
-      <motion.div 
+      <motion.a
+        href="#hero"
         className="navLogo"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
+        aria-label="Back to top"
       >
         {logoLetters.map((letter, index) => (
           <motion.span
@@ -81,8 +122,8 @@ export default function Navbar() {
             {letter}
           </motion.span>
         ))}
-      </motion.div>
-      
+      </motion.a>
+
       <div className="navLinks">
         {navItems.map((item, index) => {
           const sectionId = item.href.substring(1);
@@ -98,14 +139,62 @@ export default function Navbar() {
         })}
       </div>
 
-      <button 
-        onClick={() => setDark(!dark)} 
-        className="toggle"
-        aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
-      >
-        {dark ? <FaSun /> : <FaMoon />}
-      </button>
+      <div className="navActions">
+        <button 
+          onClick={() => setDark(!dark)} 
+          className="toggle"
+          aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {dark ? <FaSun /> : <FaMoon />}
+        </button>
+
+        <button
+          onClick={() => setMenuOpen((open) => !open)}
+          className="menuToggle"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
+        >
+          {menuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            <motion.div
+              className="mobileMenuOverlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setMenuOpen(false)}
+            />
+            <motion.div
+              id="mobile-menu"
+              className="mobileMenu"
+              initial={{ opacity: 0, x: "100%" }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: "100%" }}
+              transition={{ type: "spring", stiffness: 260, damping: 30 }}
+            >
+              {navItems.map((item, index) => {
+                const sectionId = item.href.substring(1);
+                return (
+                  <a
+                    key={index}
+                    href={item.href}
+                    className={`mobileNavLink ${activeSection === sectionId ? "active" : ""}`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                );
+              })}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
-

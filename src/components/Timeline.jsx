@@ -22,6 +22,7 @@ const itemVariants = {
 export default function Timeline() {
   return (
     <motion.section 
+      id="journey"
       className="section"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
