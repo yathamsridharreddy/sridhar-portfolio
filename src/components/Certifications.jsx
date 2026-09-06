@@ -45,6 +45,8 @@ const certifications = [
     skills: ["HTML", "CSS", "Web Fundamentals"],
     cert: "/html-css-cert.pdf",
     badge: "/html-css-badge.png",
+    verify:
+      "https://www.credly.com/earner/earned/badge/ef7fa949-dfde-4ecd-aa27-4b02b1466e4f",
     accent: "#E34F26",
   },
 ];
