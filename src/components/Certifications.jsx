@@ -18,6 +18,7 @@ const certifications = [
     desc: "Validates developing, deploying and debugging cloud-native applications on AWS.",
     skills: ["AWS", "AWS Cloud", "Code Development", "Code Deployment", "Cloud Certification"],
     cert: "/aws-developer-associate-cert.pdf",
+    badge: "/aws-developer-associate-badge.png",
     verify:
       "https://www.credly.com/earner/earned/badge/b6c2f79f-6f9f-466e-9305-befe9506f910",
     accent: "#FF9900",
