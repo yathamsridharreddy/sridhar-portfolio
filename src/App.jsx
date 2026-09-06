@@ -19,13 +19,16 @@ import Footer from "./components/Footer";
 export default function App() {
   return (
     <>
+      <a className="skipLink" href="#main">
+        Skip to content
+      </a>
       <Preloader />
       <Cursor />
       <ScrollProgress />
       <Navbar />
       <ViewerCount />
 
-      <main>
+      <main id="main">
         <Hero />
         <About />
         <Skills />

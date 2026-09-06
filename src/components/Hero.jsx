@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import { TypeAnimation } from "react-type-animation";
 import MagneticButton from "./MagneticButton";
 import { FaArrowDown, FaFileArrowDown, FaPaperPlane } from "react-icons/fa6";
-import profile from "../assets/profile1.jpg";
+import profile from "../assets/profile1.webp";
 import { ease, dur } from "../motion";
 
 /** Button that leans toward the cursor. */
@@ -50,6 +50,10 @@ export default function Hero() {
             src={profile}
             alt="Yatham Sridhar Reddy"
             className="profilePic"
+            width="440"
+            height="440"
+            fetchpriority="high"
+            decoding="async"
             whileHover={{ scale: 1.04 }}
             transition={{ duration: dur.fast, ease: ease.out }}
           />
