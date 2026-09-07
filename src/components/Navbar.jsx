@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { FaMoon, FaSun, FaBars, FaXmark } from "react-icons/fa6";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { flushSync } from "react-dom";
+import { FaMoon, FaSun, FaBars, FaXmark, FaMagnifyingGlass } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
 import { ease, dur, spring } from "../motion";
 
@@ -18,6 +19,10 @@ const navItems = [
 ];
 
 const logoLetters = "SRIDHAR".split("");
+
+const isMacUA = () =>
+  typeof navigator !== "undefined" &&
+  /mac/i.test(navigator.platform || navigator.userAgent);
 const THEME_KEY = "portfolio-theme";
 
 function getInitialTheme() {
@@ -28,17 +33,82 @@ function getInitialTheme() {
   return !window.matchMedia("(prefers-color-scheme: light)").matches;
 }
 
+function applyTheme(isDark) {
+  document.body.classList.toggle("dark", isDark);
+  document.body.classList.toggle("light", !isDark);
+  window.localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
+}
+
 export default function Navbar() {
   const [dark, setDark] = useState(getInitialTheme);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
 
+  const themeBtnRef = useRef(null);
+
   useEffect(() => {
-    document.body.classList.toggle("dark", dark);
-    document.body.classList.toggle("light", !dark);
-    window.localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
+    applyTheme(dark);
   }, [dark]);
+
+  /**
+   * Theme switch as a circular wipe, using the native View Transitions API.
+   * Zero bytes of library: the browser snapshots before and after, and we grow
+   * a clip-path circle from the button out to the furthest viewport corner.
+   * Firefox has not shipped the API, so the guard falls back to an instant
+   * switch rather than breaking the toggle.
+   */
+  const toggleTheme = useCallback(() => {
+    const next = !dark;
+    const btn = themeBtnRef.current;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!btn || reduced || typeof document.startViewTransition !== "function") {
+      setDark(next);
+      return;
+    }
+
+    const { top, left, width, height } = btn.getBoundingClientRect();
+    const x = left + width / 2;
+    const y = top + height / 2;
+    const maxRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = document.startViewTransition(() => {
+      // flushSync commits the state inside the callback, and applyTheme
+      // guarantees the "after" snapshot really shows the new palette.
+      flushSync(() => setDark(next));
+      applyTheme(next);
+    });
+
+    transition.ready
+      .then(() => {
+        document.documentElement.animate(
+          {
+            clipPath: [
+              `circle(0px at ${x}px ${y}px)`,
+              `circle(${maxRadius}px at ${x}px ${y}px)`,
+            ],
+          },
+          {
+            duration: 520,
+            easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+            fill: "forwards",
+            pseudoElement: "::view-transition-new(root)",
+          }
+        );
+      })
+      .catch(() => {});
+  }, [dark]);
+
+  // The command palette can ask for a theme change too.
+  useEffect(() => {
+    const onToggle = () => toggleTheme();
+    window.addEventListener("portfolio:toggle-theme", onToggle);
+    return () => window.removeEventListener("portfolio:toggle-theme", onToggle);
+  }, [toggleTheme]);
 
   useEffect(() => {
     if (window.localStorage.getItem(THEME_KEY)) return;
@@ -132,7 +202,21 @@ export default function Navbar() {
 
       <div className="navActions">
         <button
-          onClick={() => setDark(!dark)}
+          type="button"
+          className="paletteTrigger"
+          onClick={() => window.dispatchEvent(new CustomEvent("portfolio:open-palette"))}
+          aria-label="Open command palette"
+        >
+          <FaMagnifyingGlass aria-hidden="true" />
+          <span className="paletteTriggerHint">
+            <kbd>{isMacUA() ? "\u2318" : "Ctrl"}</kbd>
+            <kbd>K</kbd>
+          </span>
+        </button>
+
+        <button
+          ref={themeBtnRef}
+          onClick={toggleTheme}
           className="iconBtn"
           aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
         >

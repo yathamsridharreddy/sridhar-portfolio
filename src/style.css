@@ -2255,6 +2255,12 @@ body.light .sectionGlow {
 }
 
 
+@media (max-width: 900px) {
+  .paletteTriggerHint {
+    display: none;
+  }
+}
+
 @media (max-width: 720px) {
   .pipelineStages {
     grid-template-columns: 1fr;
@@ -2293,6 +2299,169 @@ body.light .sectionGlow {
     left: 50%;
   }
   .terminalBody { height: 300px; font-size: 0.8rem; }
+}
+
+
+/* 13. Command palette */
+
+.paletteTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: var(--r-full);
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: color var(--t-fast), border-color var(--t-fast),
+    background var(--t-fast);
+}
+.paletteTrigger:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.paletteTriggerHint {
+  display: inline-flex;
+  gap: 0.2rem;
+}
+.paletteTriggerHint kbd,
+.paletteFooter kbd,
+.paletteEsc {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.68rem;
+  line-height: 1;
+  padding: 0.22rem 0.36rem;
+  border-radius: 5px;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.paletteBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(3rem, 12vh, 8rem) 1rem 2rem;
+  background: rgba(3, 6, 14, 0.62);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.palette {
+  width: min(560px, 100%);
+  max-height: min(70vh, 520px);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface-solid);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lg);
+}
+.paletteInputRow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.95rem 1.05rem;
+  border-bottom: 1px solid var(--border);
+}
+.paletteSearchIcon {
+  color: var(--muted);
+  flex: none;
+}
+.paletteInput {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.98rem;
+}
+.paletteInput::placeholder {
+  color: var(--muted);
+}
+.paletteList {
+  overflow-y: auto;
+  padding: 0.45rem;
+}
+.paletteGroup {
+  margin: 0.55rem 0 0.25rem;
+  padding: 0 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.paletteItem {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.58rem 0.6rem;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  color: var(--text-2);
+}
+.paletteItem.is-active {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+.paletteItemIcon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  flex: none;
+}
+.paletteItem.is-active .paletteItemIcon {
+  color: var(--accent);
+}
+.paletteItemLabel {
+  font-size: 0.92rem;
+}
+.paletteEmpty {
+  margin: 0;
+  padding: 1.4rem 0.6rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.paletteFooter {
+  display: flex;
+  gap: 1.1rem;
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.paletteFooter span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* 14. Native view transition for the theme wipe.
+   Kill the browser default cross-fade and stack the new snapshot above the
+   old one, so the growing clip-path circle is what the eye actually reads. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 0;
+}
+::view-transition-new(root) {
+  z-index: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
