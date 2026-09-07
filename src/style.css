@@ -2033,6 +2033,268 @@ body.light .sectionGlow {
   will-change: clip-path;
 }
 
+
+/* 11. Delivery pipeline */
+
+.pipeline {
+  position: relative;
+  --p: 0;
+}
+
+/* The wire sits behind the nodes. --p fills it, and the media query below
+   decides whether that fill runs across or down. */
+.pipelineWire {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 27px;
+  height: 2px;
+  background: var(--border);
+  border-radius: var(--r-full);
+  overflow: visible;
+}
+.pipelineFill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border-radius: inherit;
+  transform: scaleX(var(--p));
+  transform-origin: left center;
+}
+.pipelinePayload {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--p) * 100%);
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft), 0 0 18px 3px var(--accent);
+}
+
+.pipelineStages {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pipelineStage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+.pipelineNode {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  font-size: 1.35rem;
+  color: var(--muted);
+  background: var(--surface-solid);
+  border: 2px solid var(--border);
+  transition: color var(--t-base), border-color var(--t-base),
+    box-shadow var(--t-base), transform var(--t-base);
+}
+.pipelineStage.is-done .pipelineNode {
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 5px var(--accent-soft), var(--glow);
+  transform: scale(1.06);
+}
+.pipelineLabel {
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--text);
+}
+.pipelineCmd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.74rem;
+  color: var(--muted);
+  word-break: break-word;
+}
+.pipelineStatus {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.16rem 0.55rem;
+  border-radius: var(--r-full);
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  transition: color var(--t-base), background var(--t-base),
+    border-color var(--t-base);
+}
+.pipelineStage.is-done .pipelineStatus {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.4);
+  background: rgba(52, 211, 153, 0.12);
+}
+
+/* 12. Terminal */
+
+.terminal {
+  max-width: 780px;
+  margin: 0 auto;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-solid);
+  box-shadow: var(--shadow-lg);
+}
+.terminalBar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+.terminalDot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex: none;
+}
+.terminalDot.is-red { background: #ff5f57; }
+.terminalDot.is-amber { background: #febc2e; }
+.terminalDot.is-green { background: #28c840; }
+.terminalTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-left: 0.6rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.terminalBody {
+  padding: 1rem 1.1rem 1.1rem;
+  height: 340px;
+  overflow-y: auto;
+  cursor: text;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+.terminalLog {
+  display: flex;
+  flex-direction: column;
+}
+.termLine {
+  color: var(--text-2);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.termLine.is-cmd {
+  display: flex;
+  gap: 0.5rem;
+  color: var(--text);
+  font-weight: 600;
+  margin-top: 0.4rem;
+}
+.termPrompt {
+  color: var(--accent);
+  flex: none;
+  font-weight: 700;
+}
+.terminalInputRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+.terminalInput {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  padding: 0;
+}
+.terminalInput::placeholder {
+  color: var(--muted);
+  opacity: 0.75;
+}
+
+.terminalChips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: 780px;
+  margin: 1rem auto 0;
+}
+.terminalChip {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+  padding: 0.38rem 0.8rem;
+  border-radius: var(--r-full);
+  color: var(--text-2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: color var(--t-fast), border-color var(--t-fast),
+    transform var(--t-fast), background var(--t-fast);
+}
+.terminalChip:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  transform: translateY(-2px);
+}
+
+
+@media (max-width: 720px) {
+  .pipelineStages {
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+  }
+  .pipelineStage {
+    flex-direction: row;
+    align-items: start;
+    min-height: 56px;
+    text-align: left;
+    gap: 0.9rem;
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    grid-template-areas: "node label status" "node cmd cmd";
+    column-gap: 0.9rem;
+    row-gap: 0.15rem;
+  }
+  .pipelineNode { grid-area: node; }
+  .pipelineLabel { grid-area: label; }
+  .pipelineCmd { grid-area: cmd; }
+  .pipelineStatus { grid-area: status; justify-self: end; }
+  .pipelineWire {
+    top: 28px;
+    bottom: 28px;
+    left: 27px;
+    right: auto;
+    width: 2px;
+    height: auto;
+  }
+  .pipelineFill {
+    transform: scaleY(var(--p));
+    transform-origin: center top;
+  }
+  .pipelinePayload {
+    top: calc(var(--p) * 100%);
+    left: 50%;
+  }
+  .terminalBody { height: 300px; font-size: 0.8rem; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -2061,5 +2323,12 @@ body.light .sectionGlow {
   .projectThumb {
     clip-path: none !important;
     will-change: auto;
+  }
+  .pipelinePayload {
+    display: none;
+  }
+  .pipelineNode,
+  .pipelineStatus {
+    transition: none !important;
   }
 }
