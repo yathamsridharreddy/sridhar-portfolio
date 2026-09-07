@@ -3,7 +3,7 @@ import { FaBriefcase, FaCertificate, FaArrowUpRightFromSquare } from "react-icon
 import SectionHeading from "./SectionHeading";
 import Parallax from "./Parallax";
 import TiltCard from "./TiltCard";
-import { viewport, dur, ease, stagger, cardIn } from "../motion";
+import { viewport, dur, ease, stagger, slideIn } from "../motion";
 
 const items = [
   {
@@ -34,7 +34,7 @@ export default function Experience() {
         viewport={viewport}
       >
         {items.map((item) => (
-          <motion.div key={item.role} variants={cardIn}>
+          <motion.div key={item.role} variants={slideIn("left", 36)}>
             <TiltCard className="experienceCard" max={5}>
               <div className="experienceHeader">
                 <span className="experienceIcon">

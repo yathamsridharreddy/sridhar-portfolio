@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { FaArrowRight } from "react-icons/fa6";
 import ProjectModal from "./ProjectModal";
 import SectionHeading from "./SectionHeading";
@@ -8,7 +8,7 @@ import carCover from "../assets/car-game-cover.webp";
 import carPoster from "../assets/car-game-poster.webp";
 import carArch from "../assets/car-game-architecture.webp";
 import cloudCover from "../assets/cloud-compare-cover.webp";
-import { stagger, cardIn, viewport, dur, ease } from "../motion";
+import { stagger, cardInFrom, viewport, dur, ease } from "../motion";
 
 const projects = [
   {
@@ -37,6 +37,20 @@ const projects = [
 
 export default function Projects() {
   const [selected, setSelected] = useState(null);
+  const reduced = useReducedMotion();
+
+  // The cover wipes in behind a mask instead of fading. It lives on the thumb
+  // wrapper, never on the <img>, because the image carries a layoutId for the
+  // morph into the modal and must stay free of competing transforms.
+  const thumbWipe = reduced
+    ? undefined
+    : {
+        hidden: { clipPath: "inset(0 100% 0 0)" },
+        visible: {
+          clipPath: "inset(0 0% 0 0)",
+          transition: { duration: 0.85, ease: ease.out, delay: 0.12 },
+        },
+      };
 
   return (
     <section id="projects" className="section projectsSection">
@@ -50,11 +64,11 @@ export default function Projects() {
         whileInView="visible"
         viewport={viewport}
       >
-        {projects.map((p) => (
+        {projects.map((p, i) => (
           <motion.article
             key={p.id}
             className="projectCard"
-            variants={cardIn}
+            variants={cardInFrom(i % 2 === 0 ? "left" : "right", 46)}
             layoutId={`card-${p.id}`}
             onClick={() => setSelected(p)}
             whileHover={{ y: -8 }}
@@ -69,7 +83,7 @@ export default function Projects() {
             }}
             aria-label={`View details for ${p.title}`}
           >
-            <div className="projectThumb">
+            <motion.div className="projectThumb" variants={thumbWipe}>
               <motion.img
                 layoutId={`thumb-${p.id}`}
                 src={p.thumb}
@@ -77,7 +91,7 @@ export default function Projects() {
                 loading="lazy"
               />
               <span className="projectShine" aria-hidden="true" />
-            </div>
+            </motion.div>
 
             <div className="projectBody">
               <motion.h3 layoutId={`title-${p.id}`} className="projectTitle">

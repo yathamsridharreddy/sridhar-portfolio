@@ -5,7 +5,7 @@ import { SiMongodb } from "react-icons/si";
 import SectionHeading from "./SectionHeading";
 import Parallax from "./Parallax";
 import TiltCard from "./TiltCard";
-import { viewport, stagger, cardIn, dur, ease, spring } from "../motion";
+import { viewport, stagger, flipIn, dur, ease, spring } from "../motion";
 
 // `verify` points at the public Credly badge (authoritative proof).
 // `cert` is an optional local PDF; the button is hidden until the file exists.
@@ -68,7 +68,7 @@ export default function Certifications() {
         viewport={viewport}
       >
         {certifications.map((c) => (
-          <motion.div key={c.id} variants={cardIn}>
+          <motion.div key={c.id} variants={flipIn}>
             <TiltCard className="certCard" max={7} style={{ "--accent": c.accent }}>
               <span className="certIcon">{c.icon}</span>
               <h3 className="certTitle">{c.title}</h3>

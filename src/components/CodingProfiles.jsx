@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { SiCodechef, SiLeetcode, SiHackerrank } from "react-icons/si";
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";
 import SectionHeading from "./SectionHeading";
-import { viewport, stagger, cardIn, dur, ease } from "../motion";
+import { viewport, stagger, popIn, dur, ease } from "../motion";
 
 const profiles = [
   {
@@ -47,7 +47,7 @@ export default function CodingProfiles() {
             target="_blank"
             rel="noopener noreferrer"
             className="profileCard"
-            variants={cardIn}
+            variants={popIn}
             style={{ "--accent": p.accent }}
             whileHover={{ y: -8 }}
             transition={{ duration: dur.fast, ease: ease.out }}

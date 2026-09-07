@@ -3,7 +3,7 @@ import { FaGraduationCap } from "react-icons/fa6";
 import SectionHeading from "./SectionHeading";
 import TiltCard from "./TiltCard";
 import Counter from "./Counter";
-import { viewport, stagger, cardIn } from "../motion";
+import { viewport, stagger, slideIn } from "../motion";
 
 const items = [
   {
@@ -33,7 +33,7 @@ export default function Education() {
         viewport={viewport}
       >
         {items.map((item) => (
-          <motion.div key={item.institution} variants={cardIn}>
+          <motion.div key={item.institution} variants={slideIn("right", 36)}>
             <TiltCard className="educationCard" max={6}>
               <span className="educationIcon">
                 <FaGraduationCap />

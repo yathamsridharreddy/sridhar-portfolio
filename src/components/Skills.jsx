@@ -1,4 +1,16 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import {
+  motion,
+  useAnimationFrame,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
+  useVelocity,
+  useInView,
+  useReducedMotion,
+  wrap,
+} from "framer-motion";
 import {
   FaAws, FaPython, FaJava, FaGitAlt, FaLinux, FaHtml5,
   FaDocker, FaServer, FaJenkins, FaCloud, FaGears,
@@ -43,19 +55,82 @@ const categories = [
 
 const marqueeSkills = categories.flatMap((c) => c.skills);
 
+// Percent of the track travelled per second at rest. Two copies means a full
+// loop is 50%, so this matches the ~38s cycle the CSS animation used to run.
+const BASE_VELOCITY = -1.35;
+
+/**
+ * Skills ticker that reacts to the page.
+ *
+ * At rest it drifts at a constant speed. While the user scrolls it speeds up
+ * in proportion to scroll velocity, flips direction to match the way they are
+ * scrolling, and skews very slightly into the movement. The result is that the
+ * strip feels attached to the page rather than looping past it.
+ */
 function Marquee() {
-  // Two identical runs; the track shifts by exactly half its width.
+  const reduced = useReducedMotion();
   const run = [...marqueeSkills, ...marqueeSkills];
+
+  const baseX = useMotionValue(0);
+  const { scrollY } = useScroll();
+  const scrollVelocity = useVelocity(scrollY);
+  const smoothVelocity = useSpring(scrollVelocity, {
+    damping: 50,
+    stiffness: 400,
+  });
+  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 4], {
+    clamp: false,
+  });
+  const skewX = useTransform(smoothVelocity, [-2500, 0, 2500], [5, 0, -5], {
+    clamp: true,
+  });
+
+  // Two copies, so wrapping at -50% lands exactly on a seam.
+  const x = useTransform(baseX, (v) => `${wrap(-50, 0, v)}%`);
+
+  const directionRef = useRef(1);
+  const pausedRef = useRef(false);
+  const trackRef = useRef(null);
+  // The old CSS animation ran forever. A rAF loop doing the same would burn
+  // cycles while the strip is nowhere near the screen, so gate it on view.
+  const inView = useInView(trackRef, { margin: "200px" });
+
+  useAnimationFrame((_, delta) => {
+    if (reduced || pausedRef.current || !inView) return;
+
+    let moveBy = directionRef.current * BASE_VELOCITY * (delta / 1000);
+
+    const factor = velocityFactor.get();
+    if (factor < 0) directionRef.current = -1;
+    else if (factor > 0) directionRef.current = 1;
+
+    moveBy += directionRef.current * moveBy * Math.abs(factor);
+    baseX.set(baseX.get() + moveBy);
+  });
+
   return (
-    <div className="marquee" aria-hidden="true">
-      <div className="marqueeTrack">
+    <div
+      className="marquee"
+      ref={trackRef}
+      aria-hidden="true"
+      onPointerEnter={() => {
+        pausedRef.current = true;
+      }}
+      onPointerLeave={() => {
+        pausedRef.current = false;
+      }}
+    >
+      <motion.div
+        className="marqueeTrack"
+        style={reduced ? undefined : { x, skewX }}
+      >
         {run.map((s, i) => (
           <span className="marqueeItem" key={`${s.name}-${i}`}>
             {s.icon}
             {s.name}
           </span>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }

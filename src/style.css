@@ -1992,12 +1992,7 @@ body.light .sectionGlow {
   align-items: center;
   gap: 2.4rem;
   width: max-content;
-  animation: marquee 38s linear infinite;
   will-change: transform;
-}
-.marquee:hover .marqueeTrack,
-.marquee:focus-within .marqueeTrack {
-  animation-play-state: paused;
 }
 .marqueeItem {
   display: inline-flex;
@@ -2017,13 +2012,25 @@ body.light .sectionGlow {
   color: var(--accent);
   transform: translateY(-2px);
 }
-@keyframes marquee {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-50%, 0, 0);
-  }
+
+
+/* 10. Scroll-linked text and card perspective */
+
+/* Words lit by scroll position. Inline, so nothing here can shift layout. */
+.scrollWord {
+  display: inline;
+}
+
+/* flipIn rotates around X, which needs a perspective ancestor to read as
+   depth rather than a vertical squash. */
+.certGrid {
+  perspective: 1200px;
+}
+
+/* The cover wipe is clipped, so the thumb must not also be painting a
+   background outside the clip. */
+.projectThumb {
+  will-change: clip-path;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2042,5 +2049,17 @@ body.light .sectionGlow {
   }
   .sectionGlow {
     display: none;
+  }
+  /* JS-driven motion cannot be stopped by CSS alone, but these guarantee the
+     resting state is readable even if a frame slips through. */
+  .marqueeTrack {
+    transform: none !important;
+  }
+  .scrollWord {
+    opacity: 1 !important;
+  }
+  .projectThumb {
+    clip-path: none !important;
+    will-change: auto;
   }
 }

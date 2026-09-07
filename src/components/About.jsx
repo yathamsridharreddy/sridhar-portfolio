@@ -2,7 +2,24 @@ import { motion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import Parallax from "./Parallax";
 import Counter from "./Counter";
-import { fadeUp, stagger, viewport, cardIn } from "../motion";
+import ScrollWords from "./ScrollWords";
+import { stagger, viewport, popIn } from "../motion";
+
+const intro = [
+  { text: "I am a " },
+  { text: "Cloud and DevOps focused Computer Science student", strong: true },
+  {
+    text:
+      " passionate about building scalable and automated systems. I have hands-on experience with ",
+  },
+  { text: "AWS (EC2, RDS, S3)", strong: true },
+  { text: ", " },
+  { text: "Docker", strong: true },
+  {
+    text:
+      ", and creating CI/CD pipelines. My goal is to build efficient and production-ready cloud systems.",
+  },
+];
 
 const stats = [
   { value: 8.3, decimals: 2, label: "CGPA", suffix: "" },
@@ -17,21 +34,9 @@ export default function About() {
       <Parallax className="sectionGlow at-left" speed={-45} aria-hidden="true" />
       <SectionHeading eyebrow="Who I am" title="About Me" />
 
-      <motion.div
-        className="aboutIntro"
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="visible"
-        viewport={viewport}
-      >
-        <p>
-          I am a <strong>Cloud and DevOps focused Computer Science student</strong>{" "}
-          passionate about building scalable and automated systems. I have
-          hands-on experience with <strong>AWS (EC2, RDS, S3)</strong>,{" "}
-          <strong>Docker</strong>, and creating CI/CD pipelines. My goal is to
-          build efficient and production-ready cloud systems.
-        </p>
-      </motion.div>
+      <div className="aboutIntro">
+        <ScrollWords segments={intro} />
+      </div>
 
       <motion.div
         className="statsGrid"
@@ -41,7 +46,7 @@ export default function About() {
         viewport={viewport}
       >
         {stats.map((s) => (
-          <motion.div key={s.label} className="statCard" variants={cardIn}>
+          <motion.div key={s.label} className="statCard" variants={popIn}>
             <Counter
               className="statValue"
               value={s.value}
