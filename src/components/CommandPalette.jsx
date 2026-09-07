@@ -36,6 +36,7 @@ const COMMANDS = [
   { id: "n-pipeline", group: "Navigation", label: "Delivery Pipeline", keywords: "ci cd build deploy", run: go("pipeline") },
   { id: "n-journey", group: "Navigation", label: "Journey", keywords: "timeline history", run: go("journey") },
   { id: "n-projects", group: "Navigation", label: "Projects", keywords: "work built portfolio", run: go("projects") },
+  { id: "n-activity", group: "Navigation", label: "Live from GitHub", keywords: "commits activity recent shipping", run: go("activity") },
   { id: "n-experience", group: "Navigation", label: "Experience", keywords: "roles internship", run: go("experience") },
   { id: "n-education", group: "Navigation", label: "Education", keywords: "college degree", run: go("education") },
   { id: "n-certs", group: "Navigation", label: "Certifications", keywords: "aws mongodb badge credential", run: go("certifications") },
@@ -102,6 +103,7 @@ export default function CommandPalette() {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const [isMac, setIsMac] = useState(false);
+  const [repos, setRepos] = useState([]);
 
   const inputRef = useRef(null);
   const listRef = useRef(null);
@@ -111,14 +113,34 @@ export default function CommandPalette() {
     setIsMac(/mac/i.test(navigator.platform || navigator.userAgent));
   }, []);
 
+  // Repositories arrive from the live GitHub feed, so the palette lists
+  // whatever is actually being worked on rather than a hard-coded list.
+  useEffect(() => {
+    const onRepos = (e) =>
+      setRepos(
+        (e.detail || []).map((r) => ({
+          id: `r-${r.repo}`,
+          group: "Repositories",
+          label: r.repo,
+          icon: <FaGithub />,
+          keywords: "repo code github source",
+          run: () => window.open(r.url, "_blank", "noopener,noreferrer"),
+        }))
+      );
+    window.addEventListener("portfolio:repos", onRepos);
+    return () => window.removeEventListener("portfolio:repos", onRepos);
+  }, []);
+
+  const all = useMemo(() => [...COMMANDS, ...repos], [repos]);
+
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return COMMANDS;
-    return COMMANDS.map((c) => ({ c, s: score(c, q) }))
+    if (!q) return all;
+    return all.map((c) => ({ c, s: score(c, q) }))
       .filter((r) => r.s >= 0)
       .sort((a, b) => b.s - a.s)
       .map((r) => r.c);
-  }, [query]);
+  }, [query, all]);
 
   const close = useCallback(() => {
     setOpen(false);

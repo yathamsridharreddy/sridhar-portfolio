@@ -3,6 +3,7 @@ import Cursor from "./components/Cursor";
 import ScrollProgress from "./components/ScrollProgress";
 import Navbar from "./components/Navbar";
 import CommandPalette from "./components/CommandPalette";
+import GitHubActivity from "./components/GitHubActivity";
 import ViewerCount from "./components/ViewerCount";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -39,6 +40,7 @@ export default function App() {
         <Pipeline />
         <Timeline />
         <Projects />
+      <GitHubActivity />
         <Experience />
         <Education />
         <Certifications />
