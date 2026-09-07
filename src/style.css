@@ -1930,11 +1930,9 @@ body.light .sectionGlow {
 
 /* Stat tiles were the one card type with no hover response. */
 .statCard {
-  transition: transform var(--t-base), border-color var(--t-base),
-    box-shadow var(--t-base);
+  transition: border-color var(--t-base), box-shadow var(--t-base);
 }
 .statCard:hover {
-  transform: translateY(-6px);
   border-color: var(--border-strong);
   box-shadow: var(--shadow);
 }
@@ -2492,13 +2490,11 @@ body.light .sectionGlow {
   border: 1px solid var(--border);
   color: var(--text);
   text-decoration: none;
-  transition: border-color var(--t-fast), background var(--t-fast),
-    transform var(--t-fast);
+  transition: border-color var(--t-fast), background var(--t-fast);
 }
 .activityRow:hover {
   border-color: var(--accent);
   background: var(--accent-soft);
-  transform: translateX(4px);
 }
 .activityDot {
   display: grid;
@@ -2635,9 +2631,6 @@ body.light .sectionGlow {
 @media (prefers-reduced-motion: reduce) {
   .activitySkel {
     animation: none;
-  }
-  .activityRow:hover {
-    transform: none;
   }
 
   *,

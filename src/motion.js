@@ -95,8 +95,8 @@ export const motionSafe = (reduced, variants) =>
 
 /** Springy pop — good for badges, icons and small tiles. */
 export const popIn = {
-  hidden: { opacity: 0, scale: 0.82 },
-  visible: { opacity: 1, scale: 1, transition: spring.bouncy },
+  hidden: { opacity: 0, scale: 0.86, y: 18 },
+  visible: { opacity: 1, scale: 1, y: 0, transition: spring.bouncy },
 };
 
 /** Tilts up into place around the X axis. Needs perspective on the parent. */

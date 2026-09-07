@@ -175,6 +175,7 @@ export default function GitHubActivity() {
             initial={reduced ? { opacity: 0 } : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: i * 0.07, ease: ease.out }}
+            whileHover={reduced ? undefined : { x: 4 }}
           >
             <span className="activityDot" aria-hidden="true">
               <FaCodeCommit />

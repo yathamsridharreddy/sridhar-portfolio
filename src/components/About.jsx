@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import Parallax from "./Parallax";
 import Counter from "./Counter";
@@ -29,6 +29,7 @@ const stats = [
 ];
 
 export default function About() {
+  const reduced = useReducedMotion();
   return (
     <section id="about" className="section aboutSection">
       <Parallax className="sectionGlow at-left" speed={-45} aria-hidden="true" />
@@ -46,7 +47,12 @@ export default function About() {
         viewport={viewport}
       >
         {stats.map((s) => (
-          <motion.div key={s.label} className="statCard" variants={popIn}>
+          <motion.div
+            key={s.label}
+            className="statCard"
+            variants={popIn}
+            whileHover={reduced ? undefined : { y: -6 }}
+          >
             <Counter
               className="statValue"
               value={s.value}
