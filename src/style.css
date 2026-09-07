@@ -2628,7 +2628,161 @@ body.light .sectionGlow {
   }
 }
 
+
+/* 16. Chaos drill overlay */
+
+.chaos {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(3, 6, 14, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.chaosPanel {
+  width: min(680px, 100%);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface-solid);
+  border: 1px solid rgba(248, 113, 113, 0.5);
+  box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.12), var(--shadow-lg);
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
+}
+.chaosPanel.is-resolved {
+  border-color: rgba(52, 211, 153, 0.5);
+  box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.12), var(--shadow-lg);
+}
+.chaosHead {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.chaosBadge {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 50%;
+  font-size: 1rem;
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.32);
+  animation: chaosPulse 1.1s ease-in-out infinite;
+}
+.chaosPanel.is-resolved .chaosBadge {
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.12);
+  border-color: rgba(52, 211, 153, 0.32);
+  animation: none;
+}
+@keyframes chaosPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(248, 113, 113, 0);
+  }
+}
+.chaosHead > div {
+  flex: 1;
+  min-width: 0;
+}
+.chaosTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.chaosSub {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.chaosClose {
+  flex: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.7rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.chaosClose:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+.chaosLog {
+  padding: 0.9rem 1.1rem;
+  min-height: 244px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.chaosLine {
+  display: flex;
+  gap: 0.7rem;
+  margin: 0 0 0.42rem;
+  color: var(--text-2);
+  word-break: break-word;
+}
+.chaosTs {
+  flex: none;
+  color: var(--muted);
+  opacity: 0.75;
+}
+.chaosLine.l-err {
+  color: #f87171;
+}
+.chaosLine.l-warn {
+  color: #fbbf24;
+}
+.chaosLine.l-ok {
+  color: #34d399;
+}
+.chaosBarTrack {
+  height: 3px;
+  background: var(--border);
+  overflow: hidden;
+}
+.chaosBar {
+  height: 100%;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, #f87171, #fbbf24, #34d399);
+}
+.chaosFoot {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0.75rem 1.1rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  background: var(--surface-2);
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 560px) {
+  .chaosLog {
+    font-size: 0.72rem;
+    min-height: 260px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .chaosBadge {
+    animation: none;
+  }
+
   .activitySkel {
     animation: none;
   }

@@ -9,6 +9,7 @@ import {
   FaGithub,
   FaAward,
   FaTerminal,
+  FaTriangleExclamation,
 } from "react-icons/fa6";
 import { ease } from "../motion";
 
@@ -52,6 +53,14 @@ const COMMANDS = [
     icon: <FaMoon />,
     keywords: "dark light mode appearance",
     run: () => window.dispatchEvent(new CustomEvent("portfolio:toggle-theme")),
+  },
+  {
+    id: "a-chaos",
+    group: "Actions",
+    label: "Run a chaos drill",
+    icon: <FaTriangleExclamation />,
+    keywords: "incident rollback konami easter egg sre outage",
+    run: () => window.dispatchEvent(new CustomEvent("portfolio:chaos")),
   },
   {
     id: "a-resume",

@@ -52,6 +52,7 @@ const HELP = [
   "  certs         earned certifications",
   "  contact       how to reach me",
   "  resume        open my resume",
+  "  chaos         simulate an incident and watch it roll back",
   "  clear         clear the screen",
 ];
 
@@ -93,6 +94,10 @@ function run(cmd) {
     case "resume":
       window.open(RESUME, "_blank", "noopener,noreferrer");
       return ["Opening resume in a new tab..."];
+    case "chaos":
+    case "chaos drill":
+      window.dispatchEvent(new CustomEvent("portfolio:chaos"));
+      return ["Injecting failure into production... (relax, it is a drill)"];
     case "sudo":
     case "sudo su":
       return ["Nice try. You do not have the pod security policy for that."];
@@ -103,7 +108,7 @@ function run(cmd) {
   }
 }
 
-const CHIPS = ["whoami", "skills", "projects", "certs", "contact", "resume"];
+const CHIPS = ["whoami", "skills", "projects", "certs", "contact", "resume", "chaos"];
 
 export default function Terminal() {
   const reduced = useReducedMotion();

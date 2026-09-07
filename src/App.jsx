@@ -3,6 +3,7 @@ import Cursor from "./components/Cursor";
 import ScrollProgress from "./components/ScrollProgress";
 import Navbar from "./components/Navbar";
 import CommandPalette from "./components/CommandPalette";
+import ChaosMode from "./components/ChaosMode";
 import GitHubActivity from "./components/GitHubActivity";
 import ViewerCount from "./components/ViewerCount";
 import Hero from "./components/Hero";
@@ -31,6 +32,7 @@ export default function App() {
       <ScrollProgress />
       <Navbar />
       <CommandPalette />
+      <ChaosMode />
       <ViewerCount />
 
       <main id="main">
