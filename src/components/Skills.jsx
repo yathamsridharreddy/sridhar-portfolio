@@ -14,31 +14,45 @@ import {
 import {
   FaAws, FaPython, FaJava, FaGitAlt, FaLinux, FaHtml5,
   FaDocker, FaServer, FaJenkins, FaCloud, FaGears,
-  FaDatabase, FaListCheck, FaCode,
+  FaDatabase, FaListCheck, FaCode, FaReact, FaNodeJs, FaLeaf,
+  FaBoltLightning, FaRightLeft,
 } from "react-icons/fa6";
 import SectionHeading from "./SectionHeading";
 import Parallax from "./Parallax";
 import { stagger, cardIn, viewport, dur, ease } from "../motion";
 
+const CC = "cloudcompare-ai";
+const SR = "sridhar-rush";
+
 const categories = [
+  {
+    title: "Full-Stack Development",
+    skills: [
+      { icon: <FaReact />, name: "React", color: "#61DAFB", proof: [CC] },
+      { icon: <FaLeaf />, name: "Spring Boot", color: "#6DB33F", proof: [CC] },
+      { icon: <FaNodeJs />, name: "Node.js", color: "#5FA04E", proof: [SR] },
+      { icon: <FaRightLeft />, name: "REST APIs", color: "#0EA5E9", proof: [CC] },
+      { icon: <FaBoltLightning />, name: "WebSockets", color: "#F59E0B", proof: [SR] },
+    ],
+  },
   {
     title: "Languages & Core Stack",
     skills: [
-      { icon: <FaAws />, name: "AWS", color: "#FF9900" },
+      { icon: <FaAws />, name: "AWS", color: "#FF9900" , proof: [CC] },
       { icon: <FaPython />, name: "Python", color: "#3776AB" },
-      { icon: <FaJava />, name: "Java", color: "#ED8B00" },
-      { icon: <FaGitAlt />, name: "Git & GitHub", color: "#F05032" },
+      { icon: <FaJava />, name: "Java", color: "#ED8B00" , proof: [CC] },
+      { icon: <FaGitAlt />, name: "Git & GitHub", color: "#F05032" , proof: [CC, SR] },
       { icon: <FaLinux />, name: "C / C++", color: "#00599C" },
-      { icon: <FaHtml5 />, name: "HTML & CSS", color: "#E34F26" },
+      { icon: <FaHtml5 />, name: "HTML & CSS", color: "#E34F26" , proof: [CC, SR] },
     ],
   },
   {
     title: "DevOps & Cloud Tools",
     skills: [
-      { icon: <FaDocker />, name: "Docker", color: "#2496ED" },
+      { icon: <FaDocker />, name: "Docker", color: "#2496ED" , proof: [CC] },
       { icon: <FaServer />, name: "Kubernetes", color: "#326CE5" },
-      { icon: <FaJenkins />, name: "Jenkins", color: "#D33833" },
-      { icon: <FaCloud />, name: "Terraform", color: "#7B42BC" },
+      { icon: <FaJenkins />, name: "Jenkins", color: "#D33833" , proof: [CC] },
+      { icon: <FaCloud />, name: "Terraform", color: "#7B42BC" , proof: [CC] },
       { icon: <FaGears />, name: "Ansible", color: "#EE0000" },
     ],
   },
@@ -46,7 +60,7 @@ const categories = [
     title: "CS Fundamentals",
     skills: [
       { icon: <FaServer />, name: "Operating Systems", color: "#FCC624" },
-      { icon: <FaDatabase />, name: "DBMS & SQL", color: "#4A90D9" },
+      { icon: <FaDatabase />, name: "DBMS & SQL", color: "#4A90D9" , proof: [CC] },
       { icon: <FaListCheck />, name: "SDLC", color: "#4CAF50" },
       { icon: <FaCode />, name: "DSA", color: "#FF5722" },
     ],
@@ -135,6 +149,23 @@ function Marquee() {
   );
 }
 
+const PROOF_LABEL = {
+  "cloudcompare-ai": "CloudCompare",
+  "sridhar-rush": "Sridhar Rush",
+};
+
+/**
+ * Jump to the project that proves a skill. Scroll first so the page is in the
+ * right place when the case study is closed again, then open it.
+ */
+function showProof(id) {
+  document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+  window.setTimeout(
+    () => window.dispatchEvent(new CustomEvent("portfolio:open-project", { detail: id })),
+    450
+  );
+}
+
 function SkillCard({ skill }) {
   return (
     <motion.div
@@ -147,6 +178,22 @@ function SkillCard({ skill }) {
       <span className="skillBloom" aria-hidden="true" />
       <span className="skillIcon">{skill.icon}</span>
       <span className="skillName">{skill.name}</span>
+
+      {skill.proof?.length > 0 && (
+        <span className="skillProof">
+          {skill.proof.map((id) => (
+            <button
+              key={id}
+              type="button"
+              className="skillProofChip"
+              onClick={() => showProof(id)}
+              aria-label={`See ${skill.name} used in ${PROOF_LABEL[id]}`}
+            >
+              {PROOF_LABEL[id]}
+            </button>
+          ))}
+        </span>
+      )}
     </motion.div>
   );
 }

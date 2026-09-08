@@ -7,18 +7,25 @@ import { stagger, viewport, popIn } from "../motion";
 
 const intro = [
   { text: "I am a " },
-  { text: "Cloud and DevOps focused Computer Science student", strong: true },
+  { text: "Full-Stack Software Developer", strong: true },
+  { text: " with a " },
+  { text: "Cloud and DevOps", strong: true },
   {
     text:
-      " passionate about building scalable and automated systems. I have hands-on experience with ",
+      " specialisation. I build the whole path an application takes: React front ends, ",
   },
-  { text: "AWS (EC2, RDS, S3)", strong: true },
-  { text: ", " },
-  { text: "Docker", strong: true },
+  { text: "Spring Boot and Node.js", strong: true },
   {
     text:
-      ", and creating CI/CD pipelines. My goal is to build efficient and production-ready cloud systems.",
+      " services behind them, and the infrastructure they run on. That has meant a multi-cloud comparison platform on ",
   },
+  { text: "AWS (S3, API Gateway, EC2, RDS)", strong: true },
+  {
+    text:
+      " provisioned with Terraform and shipped through Jenkins, and a real-time multiplayer game on an authoritative ",
+  },
+  { text: "WebSocket", strong: true },
+  { text: " relay. My goal is to build production-ready systems end to end." },
 ];
 
 const stats = [

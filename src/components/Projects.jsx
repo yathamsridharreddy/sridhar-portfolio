@@ -1,43 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { FaArrowRight } from "react-icons/fa6";
-import ProjectModal from "./ProjectModal";
+// The case study is only ever needed after a click, and it now carries the
+// architecture diagram and the full engineering breakdown. Splitting it keeps
+// that weight out of the initial bundle.
+const ProjectModal = lazy(() => import("./ProjectModal"));
 import SectionHeading from "./SectionHeading";
 import Parallax from "./Parallax";
-import carCover from "../assets/car-game-cover.webp";
-import carPoster from "../assets/car-game-poster.webp";
-import carArch from "../assets/car-game-architecture.webp";
-import cloudCover from "../assets/cloud-compare-cover.webp";
+import { projects, projectById } from "../data/projects";
 import { stagger, cardInFrom, viewport, dur, ease } from "../motion";
-
-const projects = [
-  {
-    id: "sridhar-rush",
-    title: "Sridhar Rush",
-    tagline: "Real-time multiplayer racing where your phone is the controller",
-    desc: "A real-time 3D racing game that splits the console in two: the laptop renders the race while phones become wireless gamepads over a QR scan, with no install or sign-up. A 30Hz authoritative relay keeps players in sync across the internet, backed by Supabase for leaderboards and ghost laps. Ships five race modes and five circuits, plus an installable PWA build and an offline AI opponent for solo play.",
-    tags: ["JavaScript", "WebSockets", "Node.js", "Supabase", "PWA", "Vercel"],
-    thumb: carCover,
-    images: [carPoster, carArch],
-    demo: "https://sridhar-drift.vercel.app/",
-    link: "https://github.com/yathamsridharreddy/MULTIPLAYER-CAR-GAME",
-  },
-  {
-    id: "cloudcompare-ai",
-    title: "CloudCompare AI",
-    tagline: "Multi-cloud comparison and recommendation platform",
-    desc: "A full-stack platform that evaluates infrastructure across AWS, Azure, Google Cloud, Oracle Cloud and Alibaba Cloud, weighing compute, storage, pricing estimates, performance and regional availability to produce ranked recommendations by cost or performance priority. The production stack runs a React build on S3 behind API Gateway, with a Dockerised Spring Boot API on EC2 and a private RDS MySQL instance, all provisioned reproducibly through Terraform.",
-    tags: ["Java 21", "Spring Boot", "React 19", "AWS", "Terraform", "Docker", "Jenkins"],
-    thumb: cloudCover,
-    images: [],
-    demo: "https://cloud-compareai.vercel.app/",
-    link: "https://github.com/yathamsridharreddy/CLOUD-COMPARE-AI",
-  },
-];
 
 export default function Projects() {
   const [selected, setSelected] = useState(null);
   const reduced = useReducedMotion();
+
+  // Skills link to the projects that prove them. They scroll here first, then
+  // ask for the case study by id once the section is in view.
+  useEffect(() => {
+    const onOpen = (e) => {
+      const project = projectById[e.detail];
+      if (project) setSelected(project);
+    };
+    window.addEventListener("portfolio:open-project", onOpen);
+    return () => window.removeEventListener("portfolio:open-project", onOpen);
+  }, []);
 
   // The cover wipes in behind a mask instead of fading. It lives on the thumb
   // wrapper, never on the <img>, because the image carries a layoutId for the
@@ -99,6 +85,8 @@ export default function Projects() {
               </motion.h3>
               <p className="projectTagline">{p.tagline}</p>
 
+              {p.focus && <p className="projectFocus">{p.focus}</p>}
+
               <ul className="tagRow">
                 {p.tags.map((t) => (
                   <li key={t} className="tag">
@@ -117,7 +105,9 @@ export default function Projects() {
 
       <AnimatePresence>
         {selected && (
-          <ProjectModal project={selected} close={() => setSelected(null)} />
+          <Suspense fallback={null}>
+            <ProjectModal project={selected} close={() => setSelected(null)} />
+          </Suspense>
         )}
       </AnimatePresence>
     </section>

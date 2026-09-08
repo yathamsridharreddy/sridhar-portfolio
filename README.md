@@ -2,20 +2,107 @@
 
 # Sridhar Cloud Portfolio
 
-**A single-page React portfolio for a Cloud / DevOps engineer — where the interface performs the discipline it advertises.**
+**Portfolio of Yatham Sridhar Reddy — Full-Stack Software Developer | Cloud &amp; DevOps.**<br/>A single-page React application where the interface performs the disciplines it advertises.
 
 [![Live](https://img.shields.io/badge/live-yathamsridharreddy.vercel.app-6366f1?style=flat-square)](https://yathamsridharreddy.vercel.app/)
 [![React](https://img.shields.io/badge/React-18.2-61dafb?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-7.3-646cff?style=flat-square&logo=vite&logoColor=white)](https://vite.dev)
 [![Motion](https://img.shields.io/badge/Framer_Motion-12.34-0055ff?style=flat-square&logo=framer&logoColor=white)](https://motion.dev)
-[![Bundle](https://img.shields.io/badge/JS-134_kB_gzip-22c55e?style=flat-square)](#performance-budget)
+[![CI](https://github.com/yathamsridharreddy/sridhar-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/yathamsridharreddy/sridhar-portfolio/actions/workflows/ci.yml)
+[![Bundle](https://img.shields.io/badge/JS-138_kB_gzip-22c55e?style=flat-square)](#performance-budget)
 
 </div>
 
 ---
 
+## At a glance
+
+**Purpose** — a portfolio that lets a recruiter or interviewer verify real engineering ability in about a minute, rather than reading a list of adjectives. It targets **Full-Stack / SDE** and **Cloud / DevOps** roles equally.
+
+| | |
+|---|---|
+| 🔗 **Live demo** | **[yathamsridharreddy.vercel.app](https://yathamsridharreddy.vercel.app/)** |
+| 🐙 **This repository** | [github.com/yathamsridharreddy/sridhar-portfolio](https://github.com/yathamsridharreddy/sridhar-portfolio) |
+| 📄 **Résumé** | [sridhar_final-resume.pdf](https://yathamsridharreddy.vercel.app/sridhar_final-resume.pdf) |
+| 🏅 **Certifications** | [Credly profile](https://www.credly.com/users/yatham-sridhar-reddy) |
+
+### Tech stack
+
+| Layer | Technologies |
+|---|---|
+| **Frontend** | React 18 · Vite 7 · Framer Motion 12 · plain CSS with custom properties |
+| **Backend / services** | Firebase Realtime Database (view counter) · Formspree (contact) · GitHub REST API (live commit feed) |
+| **Architecture** | Static SPA, no server runtime — every dynamic feature is a direct browser-to-API call |
+| **CI/CD** | GitHub Actions (install → lint if present → test if present → production build) |
+| **Deployment** | Vercel, auto-deploying from `main` to a global edge CDN |
+
+### Featured projects
+
+Two projects, presented as **equal in weight and different in kind** — one a cloud-deployed full-stack platform, the other a real-time distributed system.
+
+<table>
+<tr>
+<th width="50%">☁️ CloudCompare AI</th>
+<th width="50%">🏎️ Sridhar Rush</th>
+</tr>
+<tr>
+<td valign="top">
+
+**Full-Stack · Cloud &amp; DevOps**
+
+Multi-cloud comparison and recommendation platform spanning AWS, Azure, GCP, Oracle Cloud and Alibaba Cloud.
+
+```
+React 19 (S3)
+      ↓
+Amazon API Gateway
+      ↓
+Spring Boot 3.2.5 (Docker on EC2)
+      ↓
+Amazon RDS for MySQL (private)
+```
+
+`Java 21` `Spring Boot` `React 19` `REST APIs`
+`MySQL` `AWS` `Terraform` `Docker` `Jenkins`
+
+Provisioned end to end with **Terraform**; built and quality-gated through **Jenkins** and **SonarQube**.
+
+[Live](https://cloud-compareai.vercel.app/) · [Code](https://github.com/yathamsridharreddy/CLOUD-COMPARE-AI)
+
+</td>
+<td valign="top">
+
+**Full-Stack · Real-Time Systems**
+
+Real-time 3D multiplayer racing. The laptop renders the race; a phone becomes the gamepad over a QR scan.
+
+```
+Browser clients (laptop + phone)
+      ↓  wss
+Node · Express · ws relay
+   authoritative, 30Hz
+      ↓
+Supabase Postgres
+```
+
+`JavaScript` `Node.js` `Express` `WebSockets`
+`Three.js` `Supabase` `PWA` `Vercel`
+
+The relay is **authoritative at 30Hz**; clients interpolate between updates rather than simulating independently.
+
+[Live](https://sridhar-drift.vercel.app/) · [Code](https://github.com/yathamsridharreddy/MULTIPLAYER-CAR-GAME)
+
+</td>
+</tr>
+</table>
+
+> Each project opens an in-site case study covering Problem, Solution, Architecture, Frontend, Backend, Database, Cloud/Infrastructure, CI/CD and Key Engineering Decisions — every fact sourced from that project's own repository.
+
+---
+
 ## Table of contents
 
+- [At a glance](#at-a-glance)
 - [The idea](#the-idea)
 - [System architecture](#system-architecture)
 - [Page composition](#page-composition)
@@ -30,6 +117,7 @@
 - [Performance budget](#performance-budget)
 - [Accessibility](#accessibility)
 - [External services](#external-services)
+- [Continuous integration](#continuous-integration)
 - [Deployment](#deployment)
 
 ---
@@ -527,6 +615,36 @@ The `.validate` clause prevents the counter being reset downward.
 ### GitHub REST API — commit feed
 
 Unauthenticated, so **60 requests/hour per visitor IP**. Three requests per visitor, cached 10 minutes in `sessionStorage`, deferred until the section is approached, and the section unmounts on any failure.
+
+---
+
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every push and pull request to `main`, and can be dispatched manually.
+
+```mermaid
+flowchart LR
+    T["push · pull_request<br/>workflow_dispatch"] --> CO["actions/checkout@v4"]
+    CO --> N["setup-node@v4<br/>Node 20 · npm cache"]
+    N --> I["npm ci"]
+    I --> L["lint --if-present"]
+    L --> TE["test --if-present"]
+    TE --> B["<b>npm run build</b>"]
+    B --> V{"dist/index.html<br/>exists?"}
+    V -->|"no"| F["❌ fail the job"]
+    V -->|"yes"| P["✅ report bundle sizes"]
+
+    classDef a fill:#1e293b,stroke:#6366f1,color:#e2e8f0
+    classDef g fill:#052e16,stroke:#22c55e,color:#bbf7d0
+    classDef r fill:#7f1d1d,stroke:#f87171,color:#fecaca
+    classDef d fill:#422006,stroke:#f59e0b,color:#fde68a
+    class T,CO,N,I,L,TE,B a
+    class V d
+    class F r
+    class P g
+```
+
+The job **fails when the production build fails**, so a broken build cannot reach `main`. Lint and test steps use `--if-present`, so they activate automatically if those scripts are ever added — no dependency was introduced just to satisfy CI.
 
 ---
 

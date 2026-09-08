@@ -66,7 +66,7 @@ export default function Hero() {
           transition={{ duration: dur.base, ease: ease.out, delay: 0.15 }}
         >
           <span className="availableDot" />
-          Open to Cloud &amp; DevOps roles
+          Open to Full-Stack &amp; Cloud/DevOps roles
         </motion.span>
 
         {/* Name, revealed word by word from behind a mask */}
@@ -97,9 +97,11 @@ export default function Hero() {
         >
           <TypeAnimation
             sequence={[
-              "Cloud Engineer",
+              "Full-Stack Developer",
               1600,
-              "DevOps Engineer",
+              "Cloud & DevOps Engineer",
+              1600,
+              "Backend Developer",
               1600,
               "AWS Developer",
               1600,

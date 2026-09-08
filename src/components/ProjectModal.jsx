@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FaXmark, FaChevronLeft, FaChevronRight, FaGithub, FaImages,
@@ -28,6 +28,8 @@ export default function ProjectModal({ project, close }) {
     };
   }, []);
 
+  const count = project.images?.length ?? 0;
+
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") {
@@ -53,11 +55,16 @@ export default function ProjectModal({ project, close }) {
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  });
+  }, [carousel, close, count]);
 
-  const count = project.images?.length ?? 0;
-  const next = () => setIndex((i) => (i === count - 1 ? 0 : i + 1));
-  const prev = () => setIndex((i) => (i === 0 ? count - 1 : i - 1));
+  const next = useCallback(
+    () => setIndex((i) => (i === count - 1 ? 0 : i + 1)),
+    [count]
+  );
+  const prev = useCallback(
+    () => setIndex((i) => (i === 0 ? count - 1 : i - 1)),
+    [count]
+  );
 
   return (
     <>
@@ -141,6 +148,69 @@ export default function ProjectModal({ project, close }) {
                   <FaGithub /> View code
                 </a>
               </div>
+
+              {project.architecture && (
+                <section className="archBlock" aria-label="Architecture">
+                  <h4 className="modalSubhead">Architecture</h4>
+                  <ol className="archFlow">
+                    {project.architecture.flow.map((n, i) => (
+                      <li className="archNode" key={n.label}>
+                        <span className="archIndex" aria-hidden="true">
+                          {i + 1}
+                        </span>
+                        <span className="archNodeMain">
+                          <span className="archLabel">{n.label}</span>
+                          <span className="archSub">{n.sub}</span>
+                          {n.tech && <span className="archTech">{n.tech}</span>}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+
+                  {project.architecture.infra?.length > 0 && (
+                    <div className="archInfra">
+                      <span className="archInfraLabel">
+                        {project.architecture.infraLabel}
+                      </span>
+                      <ul className="archInfraRow">
+                        {project.architecture.infra.map((t) => (
+                          <li key={t} className="tag">
+                            {t}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {project.architecture.caption && (
+                    <p className="archCaption">{project.architecture.caption}</p>
+                  )}
+                </section>
+              )}
+
+              {project.breakdown?.length > 0 && (
+                <section className="breakdown" aria-label="Engineering breakdown">
+                  <h4 className="modalSubhead">Engineering breakdown</h4>
+                  <dl className="breakdownList">
+                    {project.breakdown.map((row) => (
+                      <div className="breakdownRow" key={row.k}>
+                        <dt>{row.k}</dt>
+                        <dd>
+                          {Array.isArray(row.v) ? (
+                            <ul className="breakdownBullets">
+                              {row.v.map((line, i) => (
+                                <li key={i}>{line}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            row.v
+                          )}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
+              )}
             </motion.div>
           </div>
         </motion.div>
