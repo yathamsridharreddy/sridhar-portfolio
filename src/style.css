@@ -903,13 +903,14 @@ body.light .auroraBlob {
   font-weight: 700;
 }
 
-/* The intro starts fully transparent and resolves all at once when the
-   cursor enters the section — a deliberate hover-reveal instead of the old
-   scroll-linked word-by-word lighting. Touch devices have no cursor, so the
-   guard below keeps the paragraph fully visible there. */
+/* The intro rests as a faint ghost (~18% opacity) and resolves to full
+   visibility all at once when the cursor enters the section — a deliberate
+   hover-reveal instead of the old scroll-linked word-by-word lighting.
+   Touch devices have no cursor, so the guard below keeps the paragraph
+   fully visible there. */
 @media (hover: hover) and (pointer: fine) {
   .aboutIntro p {
-    opacity: 0;
+    opacity: 0.18;
     transition: opacity var(--t-base);
   }
   #about:hover .aboutIntro p {
