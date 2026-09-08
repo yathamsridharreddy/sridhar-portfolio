@@ -42,7 +42,7 @@ export default function App() {
         <Pipeline />
         <Timeline />
         <Projects />
-      <GitHubActivity />
+        <GitHubActivity />
         <Experience />
         <Education />
         <Certifications />
