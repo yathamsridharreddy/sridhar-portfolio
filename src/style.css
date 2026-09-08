@@ -903,6 +903,20 @@ body.light .auroraBlob {
   font-weight: 700;
 }
 
+/* The intro starts fully transparent and resolves all at once when the
+   cursor enters the section — a deliberate hover-reveal instead of the old
+   scroll-linked word-by-word lighting. Touch devices have no cursor, so the
+   guard below keeps the paragraph fully visible there. */
+@media (hover: hover) and (pointer: fine) {
+  .aboutIntro p {
+    opacity: 0;
+    transition: opacity var(--t-base);
+  }
+  #about:hover .aboutIntro p {
+    opacity: 1;
+  }
+}
+
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -3026,6 +3040,11 @@ body.light .sectionGlow {
     transform: none !important;
   }
   .scrollWord {
+    opacity: 1 !important;
+  }
+  /* The About intro reveal is cursor-driven; for reduced-motion visitors the
+     resting state must simply be readable. */
+  .aboutIntro p {
     opacity: 1 !important;
   }
   .projectThumb {

@@ -2,7 +2,6 @@ import { motion, useReducedMotion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import Parallax from "./Parallax";
 import Counter from "./Counter";
-import ScrollWords from "./ScrollWords";
 import { stagger, viewport, popIn } from "../motion";
 
 const intro = [
@@ -43,7 +42,15 @@ export default function About() {
       <SectionHeading eyebrow="Who I am" title="About Me" />
 
       <div className="aboutIntro">
-        <ScrollWords segments={intro} />
+        <p>
+          {intro.map((seg, i) =>
+            seg.strong ? (
+              <strong key={i}>{seg.text}</strong>
+            ) : (
+              <span key={i}>{seg.text}</span>
+            )
+          )}
+        </p>
       </div>
 
       <motion.div
