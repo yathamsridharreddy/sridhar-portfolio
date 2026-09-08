@@ -1198,6 +1198,21 @@ body.light .auroraBlob {
   box-shadow: var(--shadow-lg);
   overflow: hidden;
 }
+
+/* The modal's own scroll area, capped below the viewport height. The modalBg
+   grid centers its child, and a centered child taller than the container
+   clips its top edge beyond the scroll origin — the case study's links used
+   to sit there, unreachable. Capping the scroll area keeps the modal smaller
+   than the viewport (when short) and gives it an internal scrollbar (when
+   long), so every part stays reachable. */
+.modalScroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  max-height: 92vh;
+  max-height: calc(100dvh - 2.5rem);
+}
 .modalClose {
   position: absolute;
   top: 0.9rem;
@@ -1257,14 +1272,26 @@ body.light .auroraBlob {
 .modalDesc {
   font-size: 0.97rem;
 }
-.modalLink {
-  margin-top: 0.4rem;
-}
+/* Links bar inside the case study: full-bleed, sticky to the top of the
+   modal's own scroll area, so Live demo and View code stay pinned and
+   visible while the Architecture and Engineering breakdown scroll under
+   them. It also acts as a visual divider between the intro and the
+   Architecture section. */
 .modalActions {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem;
-  margin-top: 0.9rem;
+  margin: 1.25rem -1.6rem 0;
+  padding: 0.85rem 1.6rem;
+  background: var(--surface-solid);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 14px 26px -20px rgba(0, 0, 0, 0.55);
+}
+.modalActions .modalLink {
+  margin-top: 0;
 }
 
 /* Lightbox */

@@ -91,6 +91,10 @@ export default function ProjectModal({ project, close }) {
             <FaXmark />
           </button>
 
+          {/* Own scroll area, capped at the viewport height. Without this cap
+              the modal can outgrow the centered modalBg and its top — where
+              the project links live — becomes unreachable by scrolling. */}
+          <div className="modalScroll">
           <div className="modalMedia">
             <motion.img
               layoutId={`thumb-${project.id}`}
@@ -128,7 +132,11 @@ export default function ProjectModal({ project, close }) {
                 ))}
               </ul>
 
-              <div className="modalActions">
+              {/* Sticky links bar: it separates the intro from the
+                  architecture and stays pinned at the top of the case study
+                  while scrolling, so Live demo and View code are always
+                  reachable. */}
+              <div className="modalActions" aria-label="Project links">
                 {project.demo && (
                   <a
                     href={project.demo}
@@ -213,6 +221,7 @@ export default function ProjectModal({ project, close }) {
               )}
             </motion.div>
           </div>
+          </div>{/* /modalScroll */}
         </motion.div>
       </motion.div>
 
