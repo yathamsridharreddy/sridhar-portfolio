@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import Preloader from "./components/Preloader";
 import Cursor from "./components/Cursor";
 import ScrollProgress from "./components/ScrollProgress";
@@ -20,6 +21,9 @@ import Achievements from "./components/Achievements";
 import Terminal from "./components/Terminal";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+// The assistant is only ever needed after a click, so it is split into its
+// own chunk that never blocks first paint.
+const Assistant = lazy(() => import("./components/Assistant"));
 
 export default function App() {
   return (
@@ -34,6 +38,9 @@ export default function App() {
       <CommandPalette />
       <ChaosMode />
       <ViewerCount />
+      <Suspense fallback={null}>
+        <Assistant />
+      </Suspense>
 
       <main id="main">
         <Hero />
